@@ -25,3 +25,20 @@ def BracketBlock(str):
 
 
     return out 
+
+def BracketBlock2(str):
+    out = []
+
+    l_brackets = []
+
+    for i in range(len(str)):
+        if str[i] == "(":
+            l_brackets.append(i)
+        elif str[i] == ")":
+            out.append(str[l_brackets.pop()+1:i])
+
+    return out
+
+test1 = "(a^b)v(a^c)"
+test2 = "(av(bvc))^~(a^(bvc))"
+print(f"test1: {BracketBlock2(test1)}, test2: {BracketBlock2(test2)}")
