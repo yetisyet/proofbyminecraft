@@ -1,22 +1,11 @@
 
-def tokenizer(str):
-    
-    out = ""
-    for c in str:
-        if c == "^":
-            out += "and "
-        elif c == "v":
-            out += "or "
-        elif c == "~":
-            out += "not "
-        else:
-            out += c +" "
+class FOLe():
 
-    return out
+    operators = ('^','v','~') #the three logic operators
 
-def main():
-    TEST = "(av(bvc))^~(a^(bvc))"
+    def __init__(self, expr):
+        body = expr
+        pass
 
-    print(tokenizer(TEST))
 
-main()
+
