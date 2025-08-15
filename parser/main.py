@@ -1,22 +1,27 @@
 
-def tokenizer(str):
+class FOLe():
+
+    operators = ('^','v','~') #the three logic operators
+
+    def __init__(self, expr):
+        body = expr
+        pass
+
+def BracketBlock(str):
+    out = [] #list containing blocks
+    counter = 0 #
+    start = 0
+    end = 0
     
-    out = ""
-    for c in str:
-        if c == "^":
-            out += "and "
-        elif c == "v":
-            out += "or "
-        elif c == "~":
-            out += "not "
-        else:
-            out += c +" "
+    for (i, c) in enumerate(str):
+        if c == "(":
+            left_counter += 1
+        elif c == ")":
+            right_counter -= 1
+        
+        
+        
 
-    return out
 
-def main():
-    TEST = "(av(bvc))^~(a^(bvc))"
 
-    print(tokenizer(TEST))
-
-main()
+    return out 
