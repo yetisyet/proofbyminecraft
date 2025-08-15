@@ -9,6 +9,12 @@ Built by these bastards for the UQCS 2025 hackathon.
 - Josiah
 - Zwe
 
+-----
+TLDR; 
+
+A program to generate a Minecraft word with custom logic expressions.
+
+Made with Python 
 
 -----
 
