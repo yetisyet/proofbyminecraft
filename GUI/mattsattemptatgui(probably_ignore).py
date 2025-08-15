@@ -20,7 +20,7 @@ tk.Label(
 thumbnail_image = image.subsample(5, 5)
 
 # Add a Text widget for user input within the input_frame
-input_text = tk.Text(input_frame, height=10, width=50)
+input_text = tk.Text(input_frame, height=10, width=25)
 input_text.pack(padx=5, pady=5, fill=tk.BOTH, expand=True)
 
 # 1 Statement evaluation / 2 Statement evaluation mode switch tab
