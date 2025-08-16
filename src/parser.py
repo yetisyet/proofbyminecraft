@@ -31,62 +31,62 @@ class FOLe:
     #         if "(" not in cur and ")" not in cur:
     #             # Bracketing is bottom level
 
-    def BracketNots(expr: str) -> str:
-        """
-        Ensure each not operation is bracketed, unless it is the top
-        level operation
-        """
+    # def BracketNots(expr: str) -> str:
+    #     """
+    #     Ensure each not operation is bracketed, unless it is the top
+    #     level operation
+    #     """
 
-        out = ""
-        i = 0
-        while i < len(expr):
-            if expr[i] == "~" and (i == 0 or expr[i-1] != "("):
-                # The not operation is not bracketed
+    #     out = ""
+    #     i = 0
+    #     while i < len(expr):
+    #         if expr[i] == "~" and (i == 0 or expr[i-1] != "("):
+    #             # The not operation is not bracketed
                 
-                out += "("
+    #             out += "("
 
-                end = i + 2
+    #             end = i + 2
 
-                if expr[i+1] == "(":
-                    end = len(expr)
-                    bracketings = 0
+    #             if expr[i+1] == "(":
+    #                 end = len(expr)
+    #                 bracketings = 0
 
-                    for j in range(i+1, len(expr)):
-                        if bracketings == 0 and expr[j] == "(":
-                            end == j
-                            break
+    #                 for j in range(i+1, len(expr)):
+    #                     if bracketings == 0 and expr[j] == "(":
+    #                         end == j
+    #                         break
 
-                        if expr[j] == "(":
-                            bracketings += 1
-                        elif expr[j] == ")":
-                            bracketings -= 1
+    #                     if expr[j] == "(":
+    #                         bracketings += 1
+    #                     elif expr[j] == ")":
+    #                         bracketings -= 1
                 
-                out += expr[i:end]
-                out += ")"
-                i = end
-            else:
-                out += expr[i]
-                i += 1
+    #             out += expr[i:end]
+    #             out += ")"
+    #             i = end
+    #         else:
+    #             out += expr[i]
+    #             i += 1
         
-        # Shitty fix - if there are no top level unbracketed operations,
-        # we must be in a not so unbracket the not
-        topLevelOperation = False
-        bracketing = 0
-        for c in expr:
-            if c == "(":
-                bracketing += 1
-            elif c == ")":
-                bracketing -= 1
+    #     # Shitty fix - if there are no top level unbracketed operations,
+    #     # we must be in a not so unbracket the not
+    #     topLevelOperation = False
+    #     bracketing = 0
+    #     for c in expr:
+    #         if c == "(":
+    #             bracketing += 1
+    #         elif c == ")":
+    #             bracketing -= 1
             
-            if bracketing == 0 and c in ["^", "v"]:
-                topLevelOperation = True
-                break
+    #         if bracketing == 0 and c in ["^", "v"]:
+    #             topLevelOperation = True
+    #             break
         
-        if not topLevelOperation:
-            out = out[1:-1]
+    #     if not topLevelOperation:
+    #         out = out[1:-1]
     
 
-        return out
+    #     return out
 
     def _GetLocal(expr, idx):
         """helper for OrderOper
@@ -154,7 +154,6 @@ class FOLe:
     def OrderOper(expr: str) -> str:
         """
         Precedence
-         AND > OR
 
         ensure the LHS' become the RHS'
 
@@ -166,34 +165,52 @@ class FOLe:
         """
 
         b = 0
-        and_idx = []
+        not_idx = []
         for i, c in enumerate(expr):
             if c == "(":
                 b += 1
             elif c == ")":
                 b -= 1
 
-            if b == 0 and c == "^":
-                and_idx.append(i)
+            if b == 0 and c == "~":
+                not_idx.append(i)
         
-        for i in reversed(and_idx):
+        for i in reversed(not_idx):
             left, right = FOLe._GetLocal(expr, i)
-            expr = FOLe._AddBrackets(expr, left, right)
+            #expr = FOLe._AddBrackets(expr, left, right)
+            if not (left > 0 and expr[left - 1] == '(' and right < 
+                    len(expr) and expr[right] ==')'):
+                expr = FOLe._AddBrackets(expr, left, right)
 
         b = 0
-        or_idx = []
+        idx = []
         for i, c in enumerate(expr):
             if c == "(":
                 b += 1
             elif c == ")":
                 b -= 1
-            
-            if b == 0 and c == "v":
-                or_idx.append(i)
 
-        for i in reversed(or_idx):
+            if b == 0 and c in ["^", "v"]:
+                idx.append(i)
+        
+        for i in (idx):
             left, right = FOLe._GetLocal(expr, i)
             expr = FOLe._AddBrackets(expr, left, right)
+
+        # b = 0
+        # or_idx = []
+        # for i, c in enumerate(expr):
+        #     if c == "(":
+        #         b += 1
+        #     elif c == ")":
+        #         b -= 1
+            
+        #     if b == 0 and c == "v":
+        #         or_idx.append(i)
+
+        # for i in reversed(or_idx):
+        #     left, right = FOLe._GetLocal(expr, i)
+        #     expr = FOLe._AddBrackets(expr, left, right)
 
         if len(expr) > 0 and expr[0] == '(' and expr[-1] == ')':
             p_count = 0
@@ -226,7 +243,7 @@ class FOLe:
         #       and bracketing
         bracket_count = 0
 
-        expr = FOLe.BracketNots(expr)
+        #expr = FOLe.BracketNots(expr)
         expr = FOLe.OrderOper(expr)
 
         for i in range(len(expr)):
