@@ -88,6 +88,85 @@ class FOLe:
 
         return out
 
+    def _GetLocal(expr, idx):
+        """helper for OrderOper
+
+            get the indicies for the local expression around
+              a top operator
+        """
+
+        local_left = 0
+        local_right = 0
+
+        #backwards find left
+        inverse_b = 0
+        for i in range(idx-1, 0, -1):
+            if expr[i] == ")":
+                inverse_b += 1
+            elif expr[i] == "(":
+                inverse_b -= 1
+
+            if inverse_b == 0:
+                local_left = i-1
+                break
+
+        #forwards find right
+        inverse_b = 0 #lazy safety
+        for i in range(idx+1, len(expr)):
+            if expr[i] == "(":
+                inverse_b += 1
+            elif expr[i] == ")":
+                inverse_b -= 1
+
+            if inverse_b == 0:
+                local_right = i+1 
+                break
+
+        return (local_left, local_right)
+
+    def OrderOper(expr: str) -> str:
+        """
+        Precedence
+         AND >
+         OR
+
+        ensure the LHS' become the RHS'
+
+        avb^c = av(b^c)
+        a^bvc = (a^b)vc
+        (a^b)^(b)v(c) = ((a^b)^(b)) v (c)
+        
+        1. get list of top level op indicies
+        """
+
+        and_idx = [] #lisst of index
+        or_idx = []
+
+        b = 0
+        for i, c in enumerate(expr):
+            if c == "(":
+                b += 1
+            elif c == ")":
+                b -= 1
+            
+            if b == 0 and c == "^":
+                and_idx.append(i)
+            if b == 0 and c == "v":
+                or_idx.append(i)
+
+        and_brackets_idx = []
+        or_brackets_idx = []
+        for i in and_idx:
+            and_brackets_idx.append(FOLe._GetLocal(expr, i))
+        for i in or_idx:
+            or_brackets_idx.append(FOLe._GetLocal(expr, i))
+
+
+        print(f"and: {and_idx}")
+        print(f"and bracs: {and_brackets_idx}")
+        print(f"or: {or_idx}")
+        print(f"or bracs: {or_brackets_idx}")
+        
 
     def SubstringOperation(expr: str) -> list[str]:
         """
@@ -101,6 +180,7 @@ class FOLe:
         bracket_count = 0
 
         expr = FOLe.BracketNots(expr)
+        #expr = FOLe.OrderOper(expr) #implement
 
         for i in range(len(expr)):
             if expr[i] == "(":
