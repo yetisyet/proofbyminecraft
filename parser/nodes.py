@@ -1,7 +1,6 @@
 from enum import Enum
 
 class Node:
-    
     def __init__(self):
         self.expr = ""
         self.parent: Node = None
@@ -14,4 +13,3 @@ class Operation(Enum):
     NOT = 0
     AND = 1
     OR = 2
-
