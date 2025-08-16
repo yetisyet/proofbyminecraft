@@ -73,7 +73,7 @@ class Arranger:
         
         return [wire_locations, up_repeaters, left_repeaters]
 
-if __name__ == "__main__":
+if __name__ == "__main__" and False:
     print(f"test2: {test2}")
     root = FOLe.CreateGraph(test2)
     
