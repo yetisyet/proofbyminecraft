@@ -1,5 +1,5 @@
 from __future__ import annotations
-from .nodes import *
+from nodes import Node, Operation
 
 class FOLe:
 
@@ -197,4 +197,6 @@ edge1 = "a v b"
 
 # print(f"test1: {FOLe.BracketBlock(test1)}, test2: {FOLe.BracketBlock(test2)}")
 # print([test1[i[0]:i[1]] for i in FOLe.BracketBlock(test1)])
+
+print(FOLe.CreateGraph(test1))
 
