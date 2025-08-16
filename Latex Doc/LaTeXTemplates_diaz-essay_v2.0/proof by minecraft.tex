@@ -1,7 +1,8 @@
 
 %----------------------------------------------------------------------------------------
-
 \documentclass[11pt]{diazessay} % Font size (can be 10pt, 11pt or 12pt)
+\usepackage{graphicx}
+\usepackage{tikz}
 
 %----------------------------------------------------------------------------------------
 %	TITLE SECTION
@@ -71,24 +72,120 @@ By embedding First Order Logic (FOL) expressions within Minecraft, we provide us
 
 %------------------------------------------------
 
-\section*{Section Name}
+\section*{Architecture and methodology}
 
-\begin{wrapfigure}{l}{0.42\textwidth} % Inline image example, use an 'r' column type to position the figure on the right
-	\includegraphics[width=\linewidth]{fish.png}
-	\caption{An example fish.}
-\end{wrapfigure}
+\section{System Design}
 
+The overall architecture of \textit{Proof by Minecraft} can be broken into four
+main components: parsing, graph representation, evaluation, and Minecraft
+world generation. Together these steps form a pipeline: a user enters one
+or two First Order Logic (FOL) expressions, the system parses and evaluates
+them, and then produces both a truth table and a Minecraft redstone circuit.
 
+\subsubsection*{Parser}
 \begin{itemize}
-	\item First bullet point item
-	\item Second bullet point item
-	\item Third bullet point item
+    \item Logical expressions are taken as strings and decomposed recursively.
+    \item Operators supported include AND ($\wedge$), OR ($\vee$), and NOT ($\sim$).
+    \item Bracketing ensures operator precedence is correctly maintained, with 
+    special care taken for NOTs.
+    \item The parser outputs a clean, bracketed form ready for tree construction.
+    \item We only need AND, OR, and NOT operators, as these are sufficient to express any logical expression. (Thank you Math1081)
+    \item So our system will reduce any logical expression to a form that only uses these operators, then evaluates and compares them.
 \end{itemize}
 
-\begin{enumerate}
-	\item First numbered list item
-	\item Second numbered list item
-\end{enumerate}
+\subsubsection*{Graph Representation}
+\begin{itemize}
+    \item Each expression is represented as a binary tree where nodes correspond 
+    to operations or variables.
+    \item Internal nodes store logical operators, while leaves represent input variables.
+    \item Parent/child relationships encode logical structure, enabling recursive traversal.
+    \item Example: $(a \wedge b) \vee c$ becomes an OR node at the root, with an 
+    AND node and variable $c$ as children.
+	
+\begin{center} % Centers the whole picture
+\begin{tikzpicture}[
+  level distance=1.8cm,
+  every node/.style={draw, circle, minimum size=8mm},
+  edge from parent/.style={draw, thick, ->},
+  level 1/.style={sibling distance=50mm},
+  level 2/.style={sibling distance=25mm}
+]
+% Root
+\node{OR}
+  % Left subtree
+  child {node {AND}
+    child {node {A}}
+    child {node {B}}}
+  % Right child
+  child {node {C}};
+\end{tikzpicture}
+\end{center}
+	\item This tree will functionally behave the same way, but will appear slightly different to a logic gate. The way you 'read', (and our algorithm reads) this tree. Is you've decomposed the expression into two remaining parts (think of order of operations) firstly you have the LHS $(a \wedge b)$ and then the RHS $\vee c$.
+	\item The following is the Logic gate representation for the aforementioned expression $(a \wedge b) \vee c$:
+	\begin{figure}[h] % h = here, t = top, b = bottom
+    \centering
+    \includegraphics[width=0.75\textwidth]{LogicGate}
+    \caption{Logic gate representation of the expression $(a \wedge b) \vee c$.}
+    \label{fig:logic_gate}
+\end{figure}
+
+
+\subsubsection*{Evaluation}
+\begin{itemize}
+    \item Once a tree is constructed, it can be recursively evaluated (with the method above) under any 
+    assignment of truth values. 
+    \item This process generates a complete truth table for the input variables.
+    \item Equivalence between two expressions is determined by comparing truth 
+    tables row by row. Every row of each truth table must be exactly equal for the expressions to be considered equivalent.
+	\item I will show an example of this in the following section, to show you how you (and our algorithm) can evaluate the equivalence of two expressions.
+\end{itemize}
+
+\section*{Comparison of Two Equivalent Expressions}
+
+We want to compare:
+\[
+(A \land B) \lor C \quad \text{and} \quad (A \lor C) \land (B \lor C)
+\]
+
+\bigskip
+
+\[
+\begin{array}{|c|c|c|c|c|}
+\hline
+A & B & C & (A \land B) \lor C & (A \lor C) \land (B \lor C) \\
+\hline
+0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 1 & 1 & 1 \\
+0 & 1 & 0 & 0 & 0 \\
+0 & 1 & 1 & 1 & 1 \\
+1 & 0 & 0 & 0 & 0 \\
+1 & 0 & 1 & 1 & 1 \\
+1 & 1 & 0 & 1 & 1 \\
+1 & 1 & 1 & 1 & 1 \\
+\hline
+\end{array}
+\]
+
+\bigskip
+
+Since the truth tables are identical, the two expressions are equivalent.  
+This shows how the algorithm evaluates different syntactic forms but produces the same output. It essentially compares these two matrices line by line, and if they are equal, then the two expressions are equivalent.
+These truth tables will be produced in minecraft too, but with redstone lamps representing the truth values (on for true, off for false).
+
+\subsubsection*{Minecraft World Generation}
+\begin{itemize}
+    \item Trees are translated into redstone contraptions:
+        \begin{itemize}
+            \item Variables $\rightarrow$ levers.
+            \item Outputs $\rightarrow$ redstone lamps.
+            \item Logical gates $\rightarrow$ redstone structures implementing AND, OR, NOT.
+        \end{itemize}
+    \item If two expressions are entered, both are placed side by side with shared inputs 
+    for direct comparison.
+    \item To demonstrate equivalence, all $2^n$ possible input combinations can be 
+    rendered, allowing visual inspection of outputs.
+\end{itemize}
+
 
 %------------------------------------------------
 
