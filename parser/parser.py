@@ -1,5 +1,5 @@
 from __future__ import annotations
-from nodes import *
+from .nodes import *
 
 class FOLe:
 
