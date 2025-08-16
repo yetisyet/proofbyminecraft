@@ -1,4 +1,5 @@
 from parser import *
+from nodes import *
 
 #assigns every gate level number
 
@@ -19,6 +20,7 @@ from parser import *
 #     for node in nodes:
 
 #     return
+
 
 def GetLctn(node):
     """return the an (x,y) coordinate tuple of a node"""
