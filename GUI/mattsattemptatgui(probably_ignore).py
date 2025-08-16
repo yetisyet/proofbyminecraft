@@ -5,7 +5,7 @@ root = tk.Tk()
 root.title("Proof by Minecraft")
 
 # Load the redstone block image for the banner
-image = tk.PhotoImage(file=r"H:\My Drive\Uni\Other\Computer Science\Hackathons\2025\redstone_lamp.png")
+image = tk.PhotoImage(file=r"GUI/redstone_lamp.png")#note: this file path has been the source of many problems if you have an issue this is probably it. tested on macos
 
 tk.Label(root, image=image).pack()
 
@@ -62,6 +62,6 @@ tk.Label(
     bg="grey",
     fg="white",
 ).pack(padx=5, pady=5)
-tk.Label(image_frame, image = tk.PhotoImage(file=r"H:\My Drive\Uni\Other\Computer Science\Hackathons\2025\redstone_lamp.png")).pack(padx=5, pady=5)
+tk.Label(image_frame, image = tk.PhotoImage(file=r"GUI/redstone_lamp.png")).pack(padx=5, pady=5) #note: this file path has been the source of many problems if you have an issue this is probably it. tested on macos
 
 root.mainloop()
