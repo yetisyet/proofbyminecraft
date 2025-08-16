@@ -1,5 +1,5 @@
 import customtkinter as ctk
-import tkinter as tk
+import tkinter as tk #know issue that tkinter is imported but not used. 
 from PIL import Image
 import threading
 import time
@@ -12,8 +12,8 @@ ctk.set_default_color_theme("blue")
 # Initialize the main window
 root = ctk.CTk()
 root.title("Proof by Minecraft")
-root.geometry("1000x800")
-root.minsize(700, 500)
+root.geometry("1000x800") #hahahahhhaaahahhahhahhahahhahhahahhahhahhahhaahahhahahhahhah
+root.minsize(700, 500) #minimum size so it cant be intefecimally small
 
 # Configure grid to make the window resizable
 root.grid_columnconfigure(0, weight=1)
@@ -34,7 +34,9 @@ def open_keyboard_popup():
     keyboard_window.geometry(f"+{main_window_x + 50}+{main_window_y + 50}")
 
     def insert_char(char):
-        """Inserts a character into the main input text box."""
+        """Inserts a character into the main input text box.
+        litteraly does that
+        """
         input_text.insert("insert", char)
 
     key_frame = ctk.CTkFrame(keyboard_window)
@@ -55,14 +57,14 @@ def open_keyboard_popup():
 try:
     icon_size = 40
     light_mode_icon_path = "GUI/light_mode.png"
-    dark_mode_icon_path = "GUI/dark_mode.png"
+    dark_mode_icon_path = "GUI/dark_mode.png" #PNG NOT VSG TIKINER DOES NOT SUPPORT SVG AAAAAAåååååå
 
     pil_light_mode_icon = Image.open(light_mode_icon_path)
     pil_dark_mode_icon = Image.open(dark_mode_icon_path)
 
     light_mode_icon = ctk.CTkImage(light_image=pil_light_mode_icon, size=(icon_size, icon_size))
     dark_mode_icon = ctk.CTkImage(light_image=pil_dark_mode_icon, size=(icon_size, icon_size))
-except FileNotFoundError:
+except FileNotFoundError: #Better call saul
     print("Error: light_mode.png or dark_mode.png not found. Using placeholder.")
     light_mode_icon = None
     dark_mode_icon = None
@@ -97,19 +99,19 @@ else:
 theme_icon.bind("<Button-1>", lambda event: toggle_appearance_mode())
 theme_icon.place(relx=0.98, rely=0.02, anchor="ne")
 
-# Main banner image frame at the very top
+# Main banner image frame at the very top thing
 image_frame_top = ctk.CTkFrame(root, fg_color="transparent")
 image_frame_top.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
 
 try:
-    image_path = "GUI/redstone_lamp.png"
+    image_path = "GUI/combination.png"
     pil_main_image = Image.open(image_path)
     main_image = ctk.CTkImage(light_image=pil_main_image, size=pil_main_image.size)
     main_label = ctk.CTkLabel(image_frame_top, image=main_image, text="")
     main_label.pack(expand=True, fill="both")
-except FileNotFoundError:
+except FileNotFoundError: #oh no
     print(f"Error: Image file not found at {image_path}. Displaying a placeholder.")
-    ctk.CTkLabel(image_frame_top, text="Proof by Minecraft", font=("Minecraft", 32, "bold")).pack()
+    ctk.CTkLabel(image_frame_top, text="Proof by Minecraft", font=("Impact", 38, "bold")).pack()
 
 
 # Main content frames for input and output
@@ -118,11 +120,14 @@ input_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 input_frame.grid_columnconfigure(0, weight=1)
 input_frame.grid_rowconfigure(3, weight=1)
 
-ctk.CTkLabel(input_frame, text="Input", font=("Arial", 16, "bold")).grid(row=0, column=0, padx=5, pady=5)
+
+#imgoinginsanehelp
+ctk.CTkLabel(input_frame, text="Formula input", font=("Arial", 16, "bold")).grid(row=0, column=0, padx=5, pady=5)
 
 # Text widget for user input
 input_text = ctk.CTkTextbox(input_frame, height=200)
 input_text.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+input_text.insert("0.0", "Enter your logic statement here...")
 
 # --- Keyboard Button ---
 keyboard_button = ctk.CTkButton(input_frame, text="Open Keyboard", command=open_keyboard_popup)
@@ -131,14 +136,33 @@ keyboard_button.grid(row=2, column=0, padx=10, pady=5)
 # --- Submit Button ---
 def submit_button_action():
     user_input = input_text.get("0.0", "end-1c")
-    processed_output = process_input(user_input)
+    processed_output = process_input(user_input) #THIS IS WHERE IT LINKS TO THE OTHER PYTHON FILE USING THE (process_input) FUNCTION DESCRIBED IN THE OTHER FILE
     output_text.delete("0.0", "end")
     output_text.insert("0.0", processed_output)
 
 submit_button = ctk.CTkButton(input_frame, text="Submit", command=submit_button_action)
 submit_button.grid(row=3, column=0, padx=10, pady=5)
 
-# Mode switch tab view
+# --- Default Text Handling ---
+default_text = "Enter your logic statement here..."
+default_text_present = True
+
+def on_input_click(event):
+    global default_text_present
+    if default_text_present:
+        input_text.delete("0.0", "end")
+        default_text_present = False
+
+def on_focus_out(event):
+    global default_text_present
+    if not input_text.get("0.0", "end-1c"):
+        input_text.insert("0.0", default_text)
+        default_text_present = True
+
+input_text.bind("<FocusIn>", on_input_click)
+input_text.bind("<FocusOut>", on_focus_out)
+
+#redbull tastes terrible
 tabview = ctk.CTkTabview(input_frame)
 tabview.grid(row=4, column=0, padx=10, pady=10, sticky="nsew")
 
@@ -151,12 +175,12 @@ ctk.CTkRadioButton(statements_tab, text="2 Statement Evaluation/Comparison", var
 
 arguments_tab = tabview.add("Logical Arguments")
 arguments_tab.grid_columnconfigure(0, weight=1)
-
+#todo
 arguments_var = ctk.StringVar(value="None")
 ctk.CTkRadioButton(arguments_tab, text="Placeholder 1", variable=arguments_var, value="Placeholder 1").pack(anchor="w", padx=10, pady=5)
 ctk.CTkRadioButton(arguments_tab, text="Placeholder 2", variable=arguments_var, value="Placeholder 2").pack(anchor="w", padx=10, pady=5)
 
-# Output frame (now contains a textbox)
+# ITS A OUTPUT FRAME MORTY
 output_frame = ctk.CTkFrame(root)
 output_frame.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
 output_frame.grid_columnconfigure(0, weight=1)
@@ -164,10 +188,11 @@ output_frame.grid_rowconfigure(1, weight=1)
 
 ctk.CTkLabel(output_frame, text="Output", font=("Arial", 16, "bold")).grid(row=0, column=0, padx=5, pady=5)
 
-# The output is now a text box
+# ITS A TEXT BOX MORTY
 output_text = ctk.CTkTextbox(output_frame, height=200, width=400)
 output_text.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 output_text.insert("0.0", "Your output will be displayed here.")
 
 
+#youtoob guy told me this was very important
 root.mainloop()
