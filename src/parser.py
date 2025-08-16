@@ -195,6 +195,23 @@ class FOLe:
             left, right = FOLe._GetLocal(expr, i)
             expr = FOLe._AddBrackets(expr, left, right)
 
+        if len(expr) > 0 and expr[0] == '(' and expr[-1] == ')':
+            p_count = 0
+            is_redundent = True
+            for i, c in enumerate(expr):
+                if i == 0 or i == len(expr) - 1:
+                    continue
+                if c == '(':
+                    p_count += 1
+                elif c == ')':
+                    p_count -= 1
+                if p_count < 0:
+                    is_redundent = False
+                    break
+            
+            if is_redundent and p_count == 0:
+                return expr[1:-1]
+            
         return expr
         
 
@@ -210,7 +227,7 @@ class FOLe:
         bracket_count = 0
 
         expr = FOLe.BracketNots(expr)
-        #expr = FOLe.OrderOper(expr) #implement
+        expr = FOLe.OrderOper(expr)
 
         for i in range(len(expr)):
             if expr[i] == "(":
@@ -251,6 +268,7 @@ class FOLe:
                     out.append(expr[i+1:])
                 
                 return out
+
 
     def ContainsOperation(expr: str) -> bool:
         for operator in FOLe.operators:
