@@ -36,7 +36,8 @@ class FOLe:
 
     def BracketNots(expr: str) -> str:
         """
-        Ensure each not operation is bracketed
+        Ensure each not operation is bracketed, unless it is the top
+        level operation
         """
 
         out = ""
@@ -70,21 +71,41 @@ class FOLe:
                 out += expr[i]
                 i += 1
         
+        # Shitty fix - if there are no top level unbracketed operations,
+        # we must be in a not so unbracket the not
+        topLevelOperation = False
+        bracketing = 0
+        for c in expr:
+            if c == "(":
+                bracketing += 1
+            elif c == ")":
+                bracketing -= 1
+            
+            if bracketing == 0 and c in ["^", "v"]:
+                topLevelOperation = True
+                break
+        
+        if not topLevelOperation:
+            out = out[1:-1]
+    
+
         return out
 
 
-
-
-
-    def CreateGraph(expr) -> Node:
+    def SubstringOperation(expr: str) -> list[str]:
         """
-        Return the top level node from the FOL expression <expr>.
+        Return a list containing the operation and the operand(s).
+        Length will either be 2 or 3 depending on operand count.
         """
-        
+
         # TODO: consider the edge case of not
         # TODO: Add method to order ambiguity with order of precedence
         #       and bracketing
         bracket_count = 0
+
+        expr = FOLe.BracketNots(expr)
+
+        print(f"89: {expr}")
 
         for i in range(len(expr)):
             if expr[i] == "(":
@@ -94,6 +115,48 @@ class FOLe:
             
             # bracket_count must not be negative implies more ) than (
             assert bracket_count >= 0
+
+            if bracket_count == 0 and expr[i] in ["^", "v"]:
+                out = []
+                # Append the operator
+                out.append(expr[i])
+
+                # Append the first operand
+                if expr[0] == "(" and expr[i-1] == ")":
+                    out.append(expr[1:i-1])
+                else:
+                    out.append(expr[:i])
+
+                # Append the second operator
+                if expr[i+1] == "(" and expr[-1] == ")":
+                    out.append(expr[i+2:-1])
+                else:
+                    out.append(expr[i+1:])
+                
+                return out
+            elif bracket_count == 0 and expr[i] == "~":
+                print("in not")
+                
+                out = []
+                # Append the operator
+                out.append(expr[i])
+
+                # Append the first (only) operand
+                if expr[i+1] == "(" and expr[-1] == ")":
+                    out.append(expr[i+2:-1])
+                else:
+                    out.append(expr[i+1:])
+                
+                return out
+
+
+    def CreateGraph(expr: str) -> Node:
+        """
+        Return the top level node from the FOL expression <expr>.
+        """
+        return FOLe.SubstringOperation(expr)
+        
+        
 
 
 test1 = "(a^b)v(a^c)"
