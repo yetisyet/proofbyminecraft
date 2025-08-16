@@ -32,7 +32,6 @@ class Circuit:  # circuit holds all its logic gates
         command.append(lantern_code)
         
             
-
         command.append(base_end)
         command = ",".join(command)
         
