@@ -52,7 +52,13 @@ By embedding First Order Logic (FOL) expressions within Minecraft, we provide us
 \begin{itemize}
     \item Each FOL expression is represented as a Minecraft world where levers act as input variables and redstone lamps display output values.  
     \item When two expressions are entered, they are rendered side by side with shared inputs, enabling direct comparison.  
-    \item To evaluate equivalence, the program systematically generates all input cases ($2^n$ possibilities) and maps them into Minecraft.  
+    \item To evaluate equivalence, the program systematically generates all input cases ($2^n$ possibilities)* and maps them into Minecraft.
+    \begin{itemize}
+        \item *The reason there are $2^n$ cases is because for each event there are two possible values, true or false. So for $n$ events, there are \[
+        \underbrace{2 \times 2 \times \cdots \times 2}_{n\,\mathrm{times}} = 2^n
+		\]
+	 combinations of truth values (since independent events are multiplied together).
+	\end{itemize}
 \end{itemize}
 
 \subsubsection*{Requirements}
