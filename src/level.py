@@ -23,11 +23,14 @@ from nodes import *
 
 
 def GetLctn(node):
-    """return the an (x,y) coordinate tuple of a node"""
+    """return the an (x,y) coordinate tuple of a node
+        TODO
+    """
 
     out = (node.offset, node.level) #tuple of (x, y) coords kinda
     return out
 
+#TODO the setting stuff better
 def SetLevels(nodes: list[Node]):
     for node in nodes:
         node.level = GetLevel(node)
