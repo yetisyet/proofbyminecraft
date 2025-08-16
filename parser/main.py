@@ -31,9 +31,6 @@ class FOLe:
     #         if "(" not in cur and ")" not in cur:
     #             # Bracketing is bottom level
 
-    def CreateNode() -> Node:
-        pass
-
     def BracketNots(expr: str) -> str:
         """
         Ensure each not operation is bracketed, unless it is the top
@@ -149,12 +146,42 @@ class FOLe:
                 
                 return out
 
+    def ContainsOperation(expr: str) -> bool:
+        for operator in FOLe.operators:
+            if operator in expr:
+                return True
+        return False
+    
+    def CreateNode(expr: str) -> Node:
+        node = Node()
 
-    def CreateGraph(expr: str) -> Node:
+    def CreateGraph(expr: str, depth: int = 0) -> Node:
         """
         Return the top level node from the FOL expression <expr>.
         """
-        return FOLe.SubstringOperation(expr)
+        node = Node()
+        parts = FOLe.SubstringOperation(expr)
+
+        if parts[0] == "^":
+            node.type = Operation.AND
+        elif parts[0] == "v":
+            node.type = Operation.OR
+        elif parts[0] == "~":
+            node.type = Operation.NOT
+        
+        if FOLe.ContainsOperation(parts[1]):
+            node.left = FOLe.CreateGraph(parts[1], depth+1)
+        else:
+            node.left = parts[1]
+        
+        if len(parts) == 3:
+            if FOLe.ContainsOperation(parts[2]):
+                node.right = FOLe.CreateGraph(parts[2], depth+1)
+            else:
+                node.right = parts[2]
+        
+        return node
+
         
         
 
