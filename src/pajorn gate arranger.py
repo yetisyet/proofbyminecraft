@@ -1,6 +1,7 @@
-from ..parser import *
+from parser import *
 
-FOLe.CreateGraph(test1)
 
 if __name__ == "__main__":
+    print(f"test2: {test2}")
+    FOLe.CreateGraph(test2)
     print("hello")
