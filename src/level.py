@@ -1,5 +1,4 @@
-from parser.nodes import *
-from parser.parser import *
+from parser import *
 
 #assigns every gate level number
 

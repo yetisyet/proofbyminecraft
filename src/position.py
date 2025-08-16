@@ -1,4 +1,4 @@
-from parser.nodes import Node
+from parser import Node
 
 
 
