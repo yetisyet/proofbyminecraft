@@ -1,4 +1,5 @@
 from parser import *
+from nodes import *
 
 #assigns every gate level number
 
@@ -20,15 +21,18 @@ from parser import *
 
 #     return
 
-def GetLctn(node):
-    """return the an (x,y) coordinate tuple of a node"""
 
+def GetLctn(node):
+    """return the an (x,y) coordinate tuple of a node
+        TODO
+    """
     out = (node.offset, node.level) #tuple of (x, y) coords kinda
     return out
 
+#TODO the setting stuff better
 def SetLevels(nodes: list[Node]):
-    for node in nodes:
-        node.level = GetLevel(node)
+    for i in range(len(nodes)):
+        nodes[i].offset = i
     pass
 
 def SetOffset(nodes: list[Node]):

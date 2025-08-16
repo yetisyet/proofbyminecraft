@@ -8,13 +8,14 @@ class Node:
 
         self.type: Operation = None
         self.var: str | None = None #var types have str data
+        self.position = tuple | None = None
 
         self.depth = 0 #number of parents to root
         self.level = 0 #testing maybe delete
         self.offset = 0 #set by SetOffset in level.py after a graph is made into list
 
     def __repr__(self):
-        return f"Node(type={self.type}:val={self.var}"
+        return f"Node(type={self.type}, var={self.var})"
 
 
 class Operation(Enum):
