@@ -3,7 +3,7 @@ import level
 import command
 
 class Arranger:
-    def Arrange(root: Node) -> list[Node]:
+    def ArrangeGates(root: Node) -> list[Node]:
         """
         Return a list of nodes with all their position values populated
         for use with Circuit class.
@@ -30,14 +30,38 @@ class Arranger:
                 isNot = nodes[node_indices[j]].type == Operation.NOT
                 nodes[node_indices[j]].position = (nodes[node_indices[j]].left.position[0] + (0 if isNot else 1), -(3 + 4*(i-1)))
 
-        return nodes 
+        return nodes
+    
+    def ArrangeRedstone(nodes: list[Node]) -> list[tuple[int, int]]:
+        """
+        Return a list of redstone wire locations.
+
+        Parameters:
+            nodes -- A list of nodes with position values populated as
+                     per ArrangeGates()
+        """
+        redstone_locations = []
+
+        for node in nodes:
+            # Wire locations for left inputs
+            if node.left:
+                ChildIsVar = node.left.type == Operation.VAR
+                redstone_locations.extend([(node.left.position[0], i) for i in range(node.left.position[1]-(1 if ChildIsVar else 2), node.position[1]+1, -1)])
+                # print(f"{node.level}: ({node.left.position[0]}, {node.position[1]+2}), ({node.left.position[0]}, {node.left.position[1]-(1 if ChildIsVar else 2)})")
+            
+            # Wire locations for right inputs
+            if node.right:
+                redstone_locations.extend([(i, node.position[1]+2) for i in range(node.position[0]+1, node.right.position[0]+1)])
+        
+        return redstone_locations
 
 if __name__ == "__main__":
     print(f"test2: {test2}")
     root = FOLe.CreateGraph(test2)
     
-    nodes = Arranger.Arrange(root)
+    nodes = Arranger.ArrangeGates(root)
     
     circuit = command.Circuit(nodes, (root.position[0], root.position[1]-2))
-    circuit.get_command()
-    
+    print(circuit.get_command())
+    for pos in Arranger.ArrangeRedstone(nodes):
+        print(pos)
