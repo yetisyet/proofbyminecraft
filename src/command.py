@@ -33,6 +33,9 @@ class Circuit:  # circuit holds all its logic gates
         lantern_code = f'''{{id:command_block_minecart,Command:"/setblock ~{self.lamp_position[0]} ~-2 ~{self.lamp_position[1]-5} redstone_lamp replace"}},{{id:command_block_minecart,Command:"/setblock ~{self.lamp_position[0]} ~-2 ~{self.lamp_position[1]-4} redstone_wire replace"}}'''
         command.append(lantern_code)
         
+        # Given that the redstone wires are straight lines by design, it would
+        # be optimal to replace the setblocks with fills, however, we do not
+        # have time.
         for pos in self.redstone_locations:
             command.append(f'''{{id:command_block_minecart,Command:"/setblock ~{pos[0]} ~-2 ~{pos[1]-4} redstone_wire replace"}}''')
             
