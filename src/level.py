@@ -26,7 +26,6 @@ def GetLctn(node):
     """return the an (x,y) coordinate tuple of a node
         TODO
     """
-
     out = (node.offset, node.level) #tuple of (x, y) coords kinda
     return out
 
