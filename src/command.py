@@ -3,9 +3,10 @@ from nodes import *
 from position import *
 
 class Circuit:  # circuit holds all its logic gates
-    def __init__(self, list_nodes:list[object], lamp_position: tuple[int,int]):
+    def __init__(self, list_nodes:list[object], lamp_position: tuple[int,int], redstone_locations: list[tuple[int, int]] = []):
         self.list_nodes = list_nodes
         self.lamp_position = lamp_position
+        self.redstone_locations = redstone_locations
         
     def get_command(self):
         base_start = '''summon falling_block ~ ~1 ~ {BlockState:{Name:"redstone_block"},Time:1,Passengers:[{id:"falling_block",BlockState:{Name:"activator_rail"}}'''
@@ -32,6 +33,8 @@ class Circuit:  # circuit holds all its logic gates
         lantern_code = f'''{{id:command_block_minecart,Command:"/setblock ~{self.lamp_position[0]} ~-2 ~{self.lamp_position[1]-5} redstone_lamp replace"}},{{id:command_block_minecart,Command:"/setblock ~{self.lamp_position[0]} ~-2 ~{self.lamp_position[1]-4} redstone_wire replace"}}'''
         command.append(lantern_code)
         
+        for pos in self.redstone_locations:
+            command.append(f'''{{id:command_block_minecart,Command:"/setblock ~{pos[0]} ~-2 ~{pos[1]-4} redstone_wire replace"}}''')
             
         command.append(base_end)
         command = ",".join(command)

@@ -40,6 +40,8 @@ class Arranger:
             nodes -- A list of nodes with position values populated as
                      per ArrangeGates()
         """
+        # TODO: Add repeaters here
+
         redstone_locations = []
 
         for node in nodes:
@@ -61,7 +63,7 @@ if __name__ == "__main__":
     
     nodes = Arranger.ArrangeGates(root)
     
-    circuit = command.Circuit(nodes, (root.position[0], root.position[1]-2))
+    circuit = command.Circuit(nodes, (root.position[0], root.position[1]-2), Arranger.ArrangeRedstone(nodes))
     print(circuit.get_command())
-    for pos in Arranger.ArrangeRedstone(nodes):
-        print(pos)
+    # for pos in Arranger.ArrangeRedstone(nodes):
+    #     print(pos)
