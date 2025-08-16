@@ -6,6 +6,8 @@
 
   A program to generate a Minecraft commands that builds custom Boolean logic circuits.
 
+  See *"proof by minecraft.pdf"* by Matt to get a very in-depth explanation. It should be the very bottom file on this page.
+
 -----
 ### Explanation:
 
