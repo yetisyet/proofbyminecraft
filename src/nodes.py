@@ -14,7 +14,7 @@ class Node:
         self.offset = 0 #set by SetOffset in level.py after a graph is made into list
 
     def __repr__(self):
-        return f"Node(type={self.type}:val={self.var}"
+        return f"Node(type={self.type}, var={self.var})"
 
 
 class Operation(Enum):
