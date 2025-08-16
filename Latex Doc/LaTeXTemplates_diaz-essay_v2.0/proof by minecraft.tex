@@ -140,11 +140,15 @@ them, and then produces both a truth table and a Minecraft redstone circuit.
 	\item I will show an example of this in the following section, to show you how you (and our algorithm) can evaluate the equivalence of two expressions.
 \end{itemize}
 
+\subsection{Brief Recap of Our Algorithm and how it interacts with truth tables}
+\item \textbf{Record Output:} For each truth assignment, record the result at the root node. This forms the complete truth table for the expression.
+    \item \textbf{Compare Expressions:} If two expressions are provided, generate their truth tables in the same variable order. Compare each row; if all outputs match, the expressions are equivalent.
+
 \section*{Comparison of Two Equivalent Expressions}
 
 We want to compare:
 \[
-(A \land B) \lor C \quad \text{and} \quad (A \lor C) \land (B \lor C)
+(A \wedge B) \vee C \quad \text{and} \quad (A \vee C) \wedge (B \vee C)
 \]
 
 \bigskip
@@ -168,7 +172,8 @@ A & B & C & (A \land B) \lor C & (A \lor C) \land (B \lor C) \\
 
 \bigskip
 
-Since the truth tables are identical, the two expressions are equivalent.  
+
+\item Since the truth tables are identical, the two expressions are equivalent.  
 This shows how the algorithm evaluates different syntactic forms but produces the same output. It essentially compares these two matrices line by line, and if they are equal, then the two expressions are equivalent.
 These truth tables will be produced in minecraft too, but with redstone lamps representing the truth values (on for true, off for false).
 
@@ -191,15 +196,5 @@ These truth tables will be produced in minecraft too, but with redstone lamps re
 
 \section*{Conclusion}
 
-
-%----------------------------------------------------------------------------------------
-%	BIBLIOGRAPHY
-%----------------------------------------------------------------------------------------
-
-\bibliographystyle{unsrt}
-
-\bibliography{sample.bib}
-
-%----------------------------------------------------------------------------------------
 
 \end{document}
