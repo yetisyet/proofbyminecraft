@@ -182,7 +182,8 @@ class FOLe:
                 child.type = Operation.VAR
                 child.var = parts[2]
 
-                node.left = child
+                node.right = child #this was left and im chaning it to
+                                   #right because i think there is bug 
         
         return node
 

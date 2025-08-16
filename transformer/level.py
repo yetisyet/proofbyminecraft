@@ -10,17 +10,30 @@ from parser.parser import *
 #         self.left: Node | str = None
 #         self.right: Node | str = None
 #         self.type: Operation = None
-#         self.depth = 0
+#         self.var: str | None = None
+#         self.depth = 0 #number of parents to root
 
-def PrintTree(node):
+#         self.level = 0 #testing maybe delete
+
+
+def PostT(node):
     """Prints tree in post order"""
+
+    out = []
     if node == None:
-        return
+        return out
 
-    PrintTree(node.left)
-    PrintTree(node.left)
-    print(node.type, end=' ')
+    out.extend(PostT(node.left))
+    out.extend(PostT(node.right))
 
+    if hasattr(node, 'var') and node.var is not None:
+        out.append(node.var)
+    elif hasattr(node, 'type'):
+        out.append(node.type)
+    else:
+        out.append(None)
+
+    return out
 
 def GetLevel(node):
 
