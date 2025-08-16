@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.3) (preloaded format=pdflatex 2025.3.23)  16 AUG 2025 14:21
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (MiKTeX 25.3) (preloaded format=pdflatex 2025.3.23)  16 AUG 2025 14:41
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -275,23 +275,31 @@ Package microtype Info: No adjustment of character kerning.
 (C:\Users\matth\AppData\Local\Programs\MiKTeX\tex/latex/microtype\mt-ppl.cfg
 File: mt-ppl.cfg 2005/11/16 v1.6 microtype config. file: Palatino (RS)
 )
-LaTeX Font Info:    Trying to load font information for OT1+ppl on input line 48.
+LaTeX Font Info:    Trying to load font information for TS1+ppl on input line 52.
+ (C:\Users\matth\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ts1ppl.fd
+File: ts1ppl.fd 2001/06/04 font definitions for TS1/ppl.
+)
+
+[1
+
+{C:/Users/matth/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/matth/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}]
+LaTeX Font Info:    Trying to load font information for OT1+ppl on input line 54.
  (C:\Users\matth\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1ppl.fd
 File: ot1ppl.fd 2001/06/04 font definitions for OT1/ppl.
 )
-LaTeX Font Info:    Trying to load font information for OML+zplm on input line 48.
+LaTeX Font Info:    Trying to load font information for OML+zplm on input line 54.
  (C:\Users\matth\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\omlzplm.fd
 File: omlzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OML/zplm.
 )
-LaTeX Font Info:    Trying to load font information for OMS+zplm on input line 48.
+LaTeX Font Info:    Trying to load font information for OMS+zplm on input line 54.
  (C:\Users\matth\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\omszplm.fd
 File: omszplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMS/zplm.
 )
-LaTeX Font Info:    Trying to load font information for OMX+zplm on input line 48.
+LaTeX Font Info:    Trying to load font information for OMX+zplm on input line 54.
  (C:\Users\matth\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\omxzplm.fd
 File: omxzplm.fd 2002/09/08 Fontinst v1.914 font definitions for OMX/zplm.
 )
-LaTeX Font Info:    Trying to load font information for OT1+zplm on input line 48.
+LaTeX Font Info:    Trying to load font information for OT1+zplm on input line 54.
  (C:\Users\matth\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ot1zplm.fd
 File: ot1zplm.fd 2002/09/08 Fontinst v1.914 font definitions for OT1/zplm.
 )
@@ -299,60 +307,51 @@ Package microtype Info: Loading generic protrusion settings for font family
 (microtype)             `zplm' (encoding: OT1).
 (microtype)             For optimal results, create family-specific settings.
 (microtype)             See the microtype manual for details.
-
-Underfull \hbox (badness 10000) in paragraph at lines 46--56
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 46--56
-
- []
-
-<Figures/fish.png, id=1, 211.79124pt x 158.5925pt>
+<Figures/fish.png, id=8, 211.79124pt x 158.5925pt>
 File: Figures/fish.png Graphic file (type png)
 <use Figures/fish.png>
-Package pdftex.def Info: Figures/fish.png  used on input line 64.
+Package pdftex.def Info: Figures/fish.png  used on input line 77.
 (pdftex.def)             Requested size: 155.35136pt x 116.33296pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 62--66
-\T1/ppl/m/n/10.95 (+20) risus eu nunc ac-cum-san condi-men-tum at sed ip-sum.
- []
+
+Package wrapfig Warning: Stationary wrapfigure forced to float on input line 83.
 
 
+Package wrapfig Warning: Stationary wrapfigure forced to float on input line 84.
 
-[1
 
-{C:/Users/matth/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/matth/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/base/8r.enc}]
-LaTeX Font Info:    Trying to load font information for TS1+ppl on input line 70.
- (C:\Users\matth\AppData\Local\Programs\MiKTeX\tex/latex/psnfss\ts1ppl.fd
-File: ts1ppl.fd 2001/06/04 font definitions for TS1/ppl.
-)
+Package wrapfig Warning: Stationary wrapfigure forced to float on input line 85.
 
-[2 <./Figures/fish.png>] (proof by minecraft.bbl
+
+Package wrapfig Warning: Stationary wrapfigure forced to float on input line 89.
+
+
+Package wrapfig Warning: Stationary wrapfigure forced to float on input line 90.
+
+(proof by minecraft.bbl
 
 LaTeX Warning: Empty `thebibliography' environment on input line 3.
 
 )
 
-[3] (proof by minecraft.aux)
+[2 <./Figures/fish.png>] (proof by minecraft.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
  ) 
 Here is how much of TeX's memory you used:
- 6663 strings out of 473523
- 112729 string characters out of 5714630
+ 6654 strings out of 473523
+ 112579 string characters out of 5714630
  554181 words of memory out of 5000000
- 29644 multiletter control sequences out of 15000+600000
- 591902 words of font info for 175 fonts, out of 8000000 for 9000
+ 29640 multiletter control sequences out of 15000+600000
+ 591929 words of font info for 172 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 72i,11n,79p,1134b,300s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 72i,11n,79p,1134b,397s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <C:/Users/matth/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplb8a.pfb><C:/Users/matth/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplr8a.pfb><C:/Users/matth/AppData/Local/Programs/MiKTeX/fonts/type1/urw/palatino/uplri8a.pfb>
-Output written on "proof by minecraft.pdf" (3 pages, 75489 bytes).
+Output written on "proof by minecraft.pdf" (2 pages, 72004 bytes).
 PDF statistics:
- 30 PDF objects out of 1000 (max. 8388607)
+ 27 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 56838 words of extra memory for PDF output out of 61914 (max. 10000000)
+ 58886 words of extra memory for PDF output out of 61914 (max. 10000000)
 
