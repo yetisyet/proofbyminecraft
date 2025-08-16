@@ -8,6 +8,7 @@ class Node:
 
         self.type: Operation = None
         self.var: str | None = None #var types have str data
+        self.position = tuple | None = None
 
         self.depth = 0 #number of parents to root
         self.level = 0 #testing maybe delete
