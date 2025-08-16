@@ -30,7 +30,7 @@ def process_input(expr) -> str:
     for gui shit."""
 
     try:
-        root = FOLe.CreateGraph(expr)
+        root = FOLe.CreateGraph(expr.strip())
         nodes = Arranger.ArrangeGates(root)
         circuit = Circuit(nodes, (root.position[0], root.position[1]-2), Arranger.ArrangeRedstone(nodes))
         out = circuit.get_command()
