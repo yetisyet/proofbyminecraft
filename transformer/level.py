@@ -15,9 +15,22 @@ from parser.parser import *
 
 #         self.level = 0 #testing maybe delete
 
+# def GetVars(nodes):
+#     vars = []
+#     for node in nodes:
+
+#     return
+
+def GetLctn(node):
+    out = () #tuple of (x, y) coords kinda
+    return
 
 def PostT(node):
-    """Prints tree in post order"""
+    """returns post ordered list of Nodes
+   
+   PostT(FOLe.CreateGraph(test1))
+   ['a', 'b', <Operation.AND: 2>, 'a', 'c', <Operation.AND: 2>, <Operation.OR: 3>] 
+    """
 
     out = []
     if node == None:
@@ -27,9 +40,9 @@ def PostT(node):
     out.extend(PostT(node.right))
 
     if hasattr(node, 'var') and node.var is not None:
-        out.append(node.var)
+        out.append(node)
     elif hasattr(node, 'type'):
-        out.append(node.type)
+        out.append(node)
     else:
         out.append(None)
 
