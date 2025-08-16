@@ -13,28 +13,46 @@ from parser.parser import *
 #         self.depth = 0
 
 
-def GetLevel(Node):
+def GetLevel(node):
 
     """should returns the level of the node
 
+        0 level is furthest left and then higher level means more right
+
+        Level
+        -------------------->
+        _______________
+        0 | 1 | 2 | ...
+        a | ^ | v |
+        b | ^ |   |
+        a |   |   |
+        c |   |   |
+        ---------------
+
+
         level(node) = 1 + max(level(childs))
 
-         L=2    ^
+         (a^b)v(a^c)
+         L=2    v
               /   |
-         L=1 v     v
+         L=1 ^     ^
             / |   / |
       L=0  a  b  a   c
     """
 
     child_level = [] #levels of the children
-    if Node.type == Operation.VAR:
-        child_level.append(0)
-    else:
-        child_level.append(GetLevel(Node.left))
-        child_level.append(GetLevel(Node.right))
+    if node is None: #base case?
+        return 0
 
-    Node.level = 1 + max(child_level)
-    return Node.level
+    if node.type == Operation.VAR: #if it variable then return 0
+        return 0
+    if node.left:
+        child_level.append(GetLevel(node.left)) # get level left child
+    if node.right:
+        child_level.append(GetLevel(node.right)) # get level right child
+
+    node.level = 1 + max(child_level)
+    return node.level
 
 
 
