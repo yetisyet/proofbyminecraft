@@ -3,7 +3,6 @@ import tkinter as tk
 from PIL import Image
 import threading
 import time
-import math
 from test import process_input
 
 # Set the initial appearance mode and color theme
@@ -13,18 +12,46 @@ ctk.set_default_color_theme("blue")
 # Initialize the main window
 root = ctk.CTk()
 root.title("Proof by Minecraft")
-root.geometry("1000x800") #defaul gemoetry
-
-root.minsize(700,500)
+root.geometry("1000x800")
+root.minsize(700, 500)
 
 # Configure grid to make the window resizable
 root.grid_columnconfigure(0, weight=1)
 root.grid_columnconfigure(1, weight=1)
 root.grid_rowconfigure(2, weight=1)
 
-# --- Theme Icon and Animation Logic ---
+# --- Virtual Keyboard Pop-up ---
+def open_keyboard_popup():
+    """Creates and displays a virtual keyboard pop-up window."""
+    keyboard_window = ctk.CTkToplevel(root)
+    keyboard_window.title("Virtual Keyboard")
+    keyboard_window.geometry("300x200")
+    keyboard_window.resizable(False, False)
+    
+    # Position the pop-up relative to the main window
+    main_window_x = root.winfo_x()
+    main_window_y = root.winfo_y()
+    keyboard_window.geometry(f"+{main_window_x + 50}+{main_window_y + 50}")
 
-# Load the SVG icons using Pillow's Image.open()
+    def insert_char(char):
+        """Inserts a character into the main input text box."""
+        input_text.insert("insert", char)
+
+    key_frame = ctk.CTkFrame(keyboard_window)
+    key_frame.pack(padx=10, pady=10, expand=True)
+    key_frame.grid_columnconfigure((0, 1, 2, 3, 4), weight=1)
+
+    keys = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j"]
+    for i, char in enumerate(keys):
+        key_button = ctk.CTkButton(key_frame, text=char, width=40, height=40,
+                                   command=lambda c=char: insert_char(c))
+        key_button.grid(row=i // 5, column=i % 5, padx=5, pady=5)
+    
+    close_button = ctk.CTkButton(keyboard_window, text="Done", command=keyboard_window.destroy)
+    close_button.pack(pady=10)
+
+
+# --- Theme Icon and Animation Logic ---
 try:
     icon_size = 40
     light_mode_icon_path = "GUI/light_mode.png"
@@ -37,7 +64,6 @@ try:
     dark_mode_icon = ctk.CTkImage(light_image=pil_dark_mode_icon, size=(icon_size, icon_size))
 except FileNotFoundError:
     print("Error: light_mode.png or dark_mode.png not found. Using placeholder.")
-    # Fallback to text if icons are missing
     light_mode_icon = None
     dark_mode_icon = None
 
@@ -51,10 +77,8 @@ def toggle_appearance_mode():
         ctk.set_appearance_mode("Dark")
         if light_mode_icon:
             theme_icon.configure(image=light_mode_icon)
-
-    # Simple animation: "pop" the icon by changing its size briefly
+            
     def animate_pop():
-        time.sleep(0.01)
         theme_icon.configure(width=icon_size + 4, height=icon_size + 4)
         time.sleep(0.05)
         theme_icon.configure(width=icon_size, height=icon_size)
@@ -100,6 +124,10 @@ ctk.CTkLabel(input_frame, text="Input", font=("Arial", 16, "bold")).grid(row=0, 
 input_text = ctk.CTkTextbox(input_frame, height=200)
 input_text.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 
+# --- Keyboard Button ---
+keyboard_button = ctk.CTkButton(input_frame, text="Open Keyboard", command=open_keyboard_popup)
+keyboard_button.grid(row=2, column=0, padx=10, pady=5)
+
 # --- Submit Button ---
 def submit_button_action():
     user_input = input_text.get("0.0", "end-1c")
@@ -108,18 +136,18 @@ def submit_button_action():
     output_text.insert("0.0", processed_output)
 
 submit_button = ctk.CTkButton(input_frame, text="Submit", command=submit_button_action)
-submit_button.grid(row=2, column=0, padx=10, pady=5)
+submit_button.grid(row=3, column=0, padx=10, pady=5)
 
 # Mode switch tab view
 tabview = ctk.CTkTabview(input_frame)
-tabview.grid(row=3, column=0, padx=10, pady=10, sticky="nsew")
+tabview.grid(row=4, column=0, padx=10, pady=10, sticky="nsew")
 
 statements_tab = tabview.add("Logic Statements")
 statements_tab.grid_columnconfigure(0, weight=1)
 
 statements_var = ctk.StringVar(value="None")
 ctk.CTkRadioButton(statements_tab, text="1 Statement Evaluation", variable=statements_var, value="1 Statement Evaluation").pack(anchor="w", padx=10, pady=5)
-ctk.CTkRadioButton(statements_tab, text="2 Statement Evaluation/Comparison", variable=statements_var, value="2 Statement Evaluation/Comparison").pack(anchor="w", padx="10", pady="5")
+ctk.CTkRadioButton(statements_tab, text="2 Statement Evaluation/Comparison", variable=statements_var, value="2 Statement Evaluation/Comparison").pack(anchor="w", padx=10, pady=5)
 
 arguments_tab = tabview.add("Logical Arguments")
 arguments_tab.grid_columnconfigure(0, weight=1)
