@@ -36,7 +36,7 @@ class Circuit:  # circuit holds all its logic gates
         command.append(base_end)
         command = ",".join(command)
         
-        print(command)
+        # print(command)
         return(command)
 
 
