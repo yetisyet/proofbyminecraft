@@ -20,9 +20,9 @@ def GetLevel(Node):
         level(node) = 1 + max(level(childs))
 
          L=2    ^
-              /   \
+              /   |
          L=1 v     v
-            / \   / \
+            / \   / |
       L=0  a  b  a   c
     """
 
