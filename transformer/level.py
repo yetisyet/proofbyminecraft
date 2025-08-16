@@ -24,8 +24,13 @@ from parser.parser import *
 def GetLctn(node):
     """return the an (x,y) coordinate tuple of a node"""
 
-    out = () #tuple of (x, y) coords kinda
-    return
+    out = (node.offset, node.level) #tuple of (x, y) coords kinda
+    return out
+
+def SetLevels(nodes: list[Node]):
+    for node in nodes:
+        node.level = GetLevel(node)
+    pass
 
 def SetOffset(nodes: list[Node]):
     """
@@ -33,7 +38,7 @@ def SetOffset(nodes: list[Node]):
     """
     for node in nodes:
         node.offset = nodes.index(node)
-    return
+    pass
 
 def PostT(node):
     """returns post ordered list of Nodes
