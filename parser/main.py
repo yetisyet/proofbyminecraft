@@ -102,8 +102,6 @@ class FOLe:
 
         expr = FOLe.BracketNots(expr)
 
-        print(f"89: {expr}")
-
         for i in range(len(expr)):
             if expr[i] == "(":
                 bracket_count += 1
@@ -132,8 +130,6 @@ class FOLe:
                 
                 return out
             elif bracket_count == 0 and expr[i] == "~":
-                print("in not")
-                
                 out = []
                 # Append the operator
                 out.append(expr[i])
@@ -151,16 +147,16 @@ class FOLe:
             if operator in expr:
                 return True
         return False
-    
-    def CreateNode(expr: str) -> Node:
-        node = Node()
 
-    def CreateGraph(expr: str, depth: int = 0) -> Node:
+    def CreateGraph(expr: str, depth: int = 0, parent: Node = None) -> Node:
         """
         Return the top level node from the FOL expression <expr>.
         """
         node = Node()
         parts = FOLe.SubstringOperation(expr)
+
+        node.depth = depth
+        node.parent = parent
 
         if parts[0] == "^":
             node.type = Operation.AND
@@ -170,13 +166,13 @@ class FOLe:
             node.type = Operation.NOT
         
         if FOLe.ContainsOperation(parts[1]):
-            node.left = FOLe.CreateGraph(parts[1], depth+1)
+            node.left = FOLe.CreateGraph(parts[1], depth+1, node)
         else:
             node.left = parts[1]
         
         if len(parts) == 3:
             if FOLe.ContainsOperation(parts[2]):
-                node.right = FOLe.CreateGraph(parts[2], depth+1)
+                node.right = FOLe.CreateGraph(parts[2], depth+1, node)
             else:
                 node.right = parts[2]
         
