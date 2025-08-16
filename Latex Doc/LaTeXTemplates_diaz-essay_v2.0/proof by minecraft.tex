@@ -1,0 +1,206 @@
+
+%----------------------------------------------------------------------------------------
+\documentclass[11pt]{diazessay} % Font size (can be 10pt, 11pt or 12pt)
+\usepackage{graphicx}
+\usepackage{tikz}
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\title{\textbf{Proof by Minecraft} \\ {\Large\itshape The greatest proof simulator in recorded history}} % Title and subtitle
+
+\author{\textbf{UQCS Hackathon} \\ \textit{Pajorn, Josiah, Matt, Gus, and Zwe}} % Author and institution
+
+\date{\today} % Date, use \date{} for no date
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Print the title section
+
+%----------------------------------------------------------------------------------------
+%	ABSTRACT AND KEYWORDS
+%----------------------------------------------------------------------------------------
+
+%\renewcommand{\abstractname}{Summary} % Uncomment to change the name of the abstract to something else
+
+\begin{abstract}
+Minecraft is widely known as a sandbox for creativity, but we extend its potential to the domain of formal reasoning: First Order Logic (FOL) and Boolean Algebra. 
+Our project, Proof by Minecraft, transforms logical expressions into interactive visual proofs. 
+Using Python, we parse and simplify expressions via trees and graph theory, 
+then generate corresponding Minecraft circuits. 
+A Tkinter-based interface allows users to input one or two expressions; the system produces a truth table, evaluates equivalence, and constructs a Minecraft representation of the logic. This approach makes formal logic both intuitive and engaging, offering a novel way to explore proofs—because sometimes, the best argument really is Proof by Minecraft.
+\end{abstract}
+
+\hspace*{3.6mm}\textit{Keywords:} First Order Logic/Boolean Algebra (FOL), Graph Theory, Trees % Keywords
+
+\vspace{30pt} % Vertical whitespace between the abstract and first section
+
+%----------------------------------------------------------------------------------------
+%	ESSAY BODY
+%----------------------------------------------------------------------------------------
+
+\section*{Rationale - Key Ideas, Requirements, and Goals.}
+The main idea behind 'Proof by Minecraft' is to make a formal logic system which is not only rigorous but visually and interactively intuitive.
+It both provides a 'graphical' representation of logical expressions, and also allows users to interact with the circuit, using levers to change the value of the inputs, and to evaluate the expression.
+The system also provides definitive feedback like truth tables, and equivalences which are essential for rigorously evaluating logical expressions.
+By embedding First Order Logic (FOL) expressions within Minecraft, we provide users with a tangible way to explore equivalence, simplification, and proofs. Our rationale stems from three guiding goals: accessibility, interactivity, and clarity.
+
+\subsubsection*{Key Ideas}
+\begin{itemize}
+    \item Each FOL expression is represented as a Minecraft world where levers act as input variables and redstone lamps display output values.  
+    \item When two expressions are entered, they are rendered side by side with shared inputs, enabling direct comparison.  
+    \item To evaluate equivalence, the program systematically generates all input cases ($2^n$ possibilities)* and maps them into Minecraft.
+    \begin{itemize}
+        \item *The reason there are $2^n$ cases is because for each event there are two possible values, true or false. So for $n$ events, there are \[
+        \underbrace{2 \times 2 \times \cdots \times 2}_{n\,\mathrm{times}} = 2^n
+		\]
+	 combinations of truth values (since independent events are multiplied together).
+	\end{itemize}
+\end{itemize}
+
+\subsubsection*{Requirements}
+\begin{itemize}
+    \item \textbf{Parsing and Representation:} Logical expressions must be parsed into a graph/tree structure using graph theory and algorithmic simplification.  
+    \item \textbf{User Interface:} A Python GUI (Tkinter) must allow users to input expressions, following Nielsen’s 10 heuristics for usability.  
+    \item \textbf{Minecraft Integration:} The parsed structure must be translated into a Minecraft world file, ensuring correct placement of redstone, lamps, and levers.  
+\end{itemize}
+
+\subsubsection*{Goals}
+\begin{itemize}
+    \item Provide an engaging, gamified method to explore logical proofs.  
+    \item Demonstrate how graph theory and algorithms can be applied creatively.  
+    \item Produce both a truth table and equivalence check alongside the Minecraft visualization.  
+\end{itemize}
+
+
+%------------------------------------------------
+
+\section*{Architecture and methodology}
+
+\section{System Design}
+
+The overall architecture of \textit{Proof by Minecraft} can be broken into four
+main components: parsing, graph representation, evaluation, and Minecraft
+world generation. Together these steps form a pipeline: a user enters one
+or two First Order Logic (FOL) expressions, the system parses and evaluates
+them, and then produces both a truth table and a Minecraft redstone circuit.
+
+\subsubsection*{Parser}
+\begin{itemize}
+    \item Logical expressions are taken as strings and decomposed recursively.
+    \item Operators supported include AND ($\wedge$), OR ($\vee$), and NOT ($\sim$).
+    \item Bracketing ensures operator precedence is correctly maintained, with 
+    special care taken for NOTs.
+    \item The parser outputs a clean, bracketed form ready for tree construction.
+    \item We only need AND, OR, and NOT operators, as these are sufficient to express any logical expression. (Thank you Math1081)
+    \item So our system will reduce any logical expression to a form that only uses these operators, then evaluates and compares them.
+\end{itemize}
+
+\subsubsection*{Graph Representation}
+\begin{itemize}
+    \item Each expression is represented as a binary tree where nodes correspond 
+    to operations or variables.
+    \item Internal nodes store logical operators, while leaves represent input variables.
+    \item Parent/child relationships encode logical structure, enabling recursive traversal.
+    \item Example: $(a \wedge b) \vee c$ becomes an OR node at the root, with an 
+    AND node and variable $c$ as children.
+	
+\begin{center} % Centers the whole picture
+\begin{tikzpicture}[
+  level distance=1.8cm,
+  every node/.style={draw, circle, minimum size=8mm},
+  edge from parent/.style={draw, thick, ->},
+  level 1/.style={sibling distance=50mm},
+  level 2/.style={sibling distance=25mm}
+]
+% Root
+\node{OR}
+  % Left subtree
+  child {node {AND}
+    child {node {A}}
+    child {node {B}}}
+  % Right child
+  child {node {C}};
+\end{tikzpicture}
+\end{center}
+	\item This tree will functionally behave the same way, but will appear slightly different to a logic gate. The way you 'read', (and our algorithm reads) this tree. Is you've decomposed the expression into two remaining parts (think of order of operations) firstly you have the LHS $(a \wedge b)$ and then the RHS $\vee c$.
+	\item The following is the Logic gate representation for the aforementioned expression $(a \wedge b) \vee c$:
+	\begin{figure}[h] % h = here, t = top, b = bottom
+    \centering
+    \includegraphics[width=0.75\textwidth]{LogicGate}
+    \caption{Logic gate representation of the expression $(a \wedge b) \vee c$.}
+    \label{fig:logic_gate}
+\end{figure}
+
+
+\subsubsection*{Evaluation}
+\begin{itemize}
+    \item Once a tree is constructed, it can be recursively evaluated (with the method above) under any 
+    assignment of truth values. 
+    \item This process generates a complete truth table for the input variables.
+    \item Equivalence between two expressions is determined by comparing truth 
+    tables row by row. Every row of each truth table must be exactly equal for the expressions to be considered equivalent.
+	\item I will show an example of this in the following section, to show you how you (and our algorithm) can evaluate the equivalence of two expressions.
+\end{itemize}
+
+\subsection{Brief Recap of Our Algorithm and how it interacts with truth tables}
+\item \textbf{Record Output:} For each truth assignment, record the result at the root node. This forms the complete truth table for the expression.
+    \item \textbf{Compare Expressions:} If two expressions are provided, generate their truth tables in the same variable order. Compare each row; if all outputs match, the expressions are equivalent.
+
+\section*{Comparison of Two Equivalent Expressions}
+
+We want to compare:
+\[
+(A \wedge B) \vee C \quad \text{and} \quad (A \vee C) \wedge (B \vee C)
+\]
+
+\bigskip
+
+\[
+\begin{array}{|c|c|c|c|c|}
+\hline
+A & B & C & (A \land B) \lor C & (A \lor C) \land (B \lor C) \\
+\hline
+0 & 0 & 0 & 0 & 0 \\
+0 & 0 & 1 & 1 & 1 \\
+0 & 1 & 0 & 0 & 0 \\
+0 & 1 & 1 & 1 & 1 \\
+1 & 0 & 0 & 0 & 0 \\
+1 & 0 & 1 & 1 & 1 \\
+1 & 1 & 0 & 1 & 1 \\
+1 & 1 & 1 & 1 & 1 \\
+\hline
+\end{array}
+\]
+
+\bigskip
+
+
+\item Since the truth tables are identical, the two expressions are equivalent.  
+This shows how the algorithm evaluates different syntactic forms but produces the same output. It essentially compares these two matrices line by line, and if they are equal, then the two expressions are equivalent.
+These truth tables will be produced in minecraft too, but with redstone lamps representing the truth values (on for true, off for false).
+
+\subsubsection*{Minecraft World Generation}
+\begin{itemize}
+    \item Trees are translated into redstone contraptions:
+        \begin{itemize}
+            \item Variables $\rightarrow$ levers.
+            \item Outputs $\rightarrow$ redstone lamps.
+            \item Logical gates $\rightarrow$ redstone structures implementing AND, OR, NOT.
+        \end{itemize}
+    \item If two expressions are entered, both are placed side by side with shared inputs 
+    for direct comparison.
+    \item To demonstrate equivalence, all $2^n$ possible input combinations can be 
+    rendered, allowing visual inspection of outputs.
+\end{itemize}
+
+
+%------------------------------------------------
+
+\section*{Conclusion}
+
+
+\end{document}
