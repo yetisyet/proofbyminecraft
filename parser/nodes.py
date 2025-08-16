@@ -5,10 +5,16 @@ class Node:
         self.parent: Node = None
         self.left: Node | str = None
         self.right: Node | str = None
+
         self.type: Operation = None
         self.var: str | None = None #var types have str data
+
         self.depth = 0 #number of parents to root
         self.level = 0 #testing maybe delete
+        self.offset = 0 #set by SetOffset in level.py after a graph is made into list
+
+    def __repr__(self):
+        return f"Node(type={self.type}:val={self.var}"
 
 
 class Operation(Enum):
