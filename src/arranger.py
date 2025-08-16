@@ -55,12 +55,21 @@ class Arranger:
             # Wire locations for left inputs
             if node.left:
                 ChildIsVar = node.left.type == Operation.VAR
-                wire_locations.extend([(node.left.position[0], i) for i in range(node.left.position[1]-(1 if ChildIsVar else 2), node.position[1]+1, -1)])
+                for i in range(node.left.position[1]-(1 if ChildIsVar else 2) - (node.position[1]+2) + 1):
+                    wire_locations.append((node.left.position[0], node.position[1]+2 + i))
+                    if not (i+2) % 15:
+                        up_repeaters.append((node.left.position[0], node.position[1]+2 + i))
+                # wire_locations.extend([(node.left.position[0], i) for i in range(node.left.position[1]-(1 if ChildIsVar else 2), node.position[1]+1, -1)])
                 # print(f"{node.level}: ({node.left.position[0]}, {node.position[1]+2}), ({node.left.position[0]}, {node.left.position[1]-(1 if ChildIsVar else 2)})")
             
             # Wire locations for right inputs
             if node.right:
-                wire_locations.extend([(i, node.position[1]+2) for i in range(node.position[0]+1, node.right.position[0]+1)])
+                for i in range((node.right.position[0]+1) - (node.position[0]+1)):
+                    wire_locations.append((node.position[0]+1 + i, node.position[1]+2))
+                    if not (i+2) % 13 and i != (node.right.position[0]+1) - (node.position[0]+1) - 1:
+                        left_repeaters.append((node.position[0]+1 + i, node.position[1]+2))
+
+                # wire_locations.extend([(i, node.position[1]+2) for i in range(node.position[0]+1, node.right.position[0]+1)])
         
         return [wire_locations, up_repeaters, left_repeaters]
 
