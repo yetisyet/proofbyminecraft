@@ -35,6 +35,6 @@ def process_input(expr) -> str:
         circuit = Circuit(nodes, (root.position[0], root.position[1]-2), Arranger.ArrangeRedstone(nodes))
         out = circuit.get_command()
     except Exception as e:
-        return 'processing error'
+        return f'processing error: {e}'
 
     return out
