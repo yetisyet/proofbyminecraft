@@ -26,14 +26,14 @@ def GetLevel(Node):
       L=0  a  b  a   c
     """
 
-    child_levels = [] #levels of the children
-    if Node.type == :
-        child_levels.append(0)
+    child_level = [] #levels of the children
+    if Node.type == Operation.VAR:
+        child_level.append(0)
     else:
-        child_levels.append(GetLevel(Node.left))
-        child_levels.append(GetLevel(Node.right))
+        child_level.append(GetLevel(Node.left))
+        child_level.append(GetLevel(Node.right))
 
-    Node.level = 1 + max(child_levels)
+    Node.level = 1 + max(child_level)
     return Node.level
 
 
