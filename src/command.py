@@ -3,7 +3,7 @@ from nodes import *
 from position import *
 
 class Circuit:  # circuit holds all its logic gates
-    def __init__(self, list_nodes:list[object], lamp_position: tuple[int,int], redstone_locations: list[tuple[int, int]] = []):
+    def __init__(self, list_nodes:list[object], lamp_position: tuple[int,int], redstone_locations: list[list[tuple[int, int]]] = [[], [], []]):
         self.list_nodes = list_nodes
         self.lamp_position = lamp_position
         self.redstone_locations = redstone_locations
@@ -36,8 +36,18 @@ class Circuit:  # circuit holds all its logic gates
         # Given that the redstone wires are straight lines by design, it would
         # be optimal to replace the setblocks with fills, however, we do not
         # have time.
-        for pos in self.redstone_locations:
+        for pos in self.redstone_locations[0]:
             command.append(f'''{{id:command_block_minecart,Command:"/setblock ~{pos[0]} ~-2 ~{pos[1]-4} redstone_wire replace"}}''')
+        
+        # Place up facing repeaters
+        for pos in self.redstone_locations[1]:
+            pass
+            # command.append(...)
+        
+        # Place left facing repeaters
+        for pos in self.redstone_locations[2]:
+            pass
+            # command.append(...)
             
         command.append(base_end)
         command = ",".join(command)

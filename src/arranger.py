@@ -32,30 +32,37 @@ class Arranger:
 
         return nodes
     
-    def ArrangeRedstone(nodes: list[Node]) -> list[tuple[int, int]]:
+    def ArrangeRedstone(nodes: list[Node]) -> list[list[tuple[int, int]]]:
         """
-        Return a list of redstone wire locations.
+        Return a list of lists of redstone locations.
 
         Parameters:
             nodes -- A list of nodes with position values populated as
                      per ArrangeGates()
+        Return format:
+            list:
+                1. list[tuple] -- redstone wire locations
+                2. list[tuple] -- up facing redstone repeater locations
+                3. list[tuple] -- left facing redstone repeater locations
         """
         # TODO: Add repeaters here
 
-        redstone_locations = []
+        wire_locations = []
+        up_repeaters = []
+        left_repeaters = []
 
         for node in nodes:
             # Wire locations for left inputs
             if node.left:
                 ChildIsVar = node.left.type == Operation.VAR
-                redstone_locations.extend([(node.left.position[0], i) for i in range(node.left.position[1]-(1 if ChildIsVar else 2), node.position[1]+1, -1)])
+                wire_locations.extend([(node.left.position[0], i) for i in range(node.left.position[1]-(1 if ChildIsVar else 2), node.position[1]+1, -1)])
                 # print(f"{node.level}: ({node.left.position[0]}, {node.position[1]+2}), ({node.left.position[0]}, {node.left.position[1]-(1 if ChildIsVar else 2)})")
             
             # Wire locations for right inputs
             if node.right:
-                redstone_locations.extend([(i, node.position[1]+2) for i in range(node.position[0]+1, node.right.position[0]+1)])
+                wire_locations.extend([(i, node.position[1]+2) for i in range(node.position[0]+1, node.right.position[0]+1)])
         
-        return redstone_locations
+        return [wire_locations, up_repeaters, left_repeaters]
 
 if __name__ == "__main__":
     print(f"test2: {test2}")
