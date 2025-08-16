@@ -95,40 +95,66 @@ class FOLe:
               a top operator
         """
 
-        local_left = 0
-        local_right = 0
-
         #backwards find left
-        inverse_b = 0
-        for i in range(idx-1, 0, -1):
+        local_left = -1
+        b = 0
+        for i in range(idx-1, -1, -1):
             if expr[i] == ")":
-                inverse_b += 1
+                b += 1
             elif expr[i] == "(":
-                inverse_b -= 1
+                b -= 1
 
-            if inverse_b == 0:
-                local_left = i-1
-                break
+            if b == 0:
+                if expr[i] in ['^', 'v'] or i == 0:
+                    local_left = i+1 if expr[i] in ['^', 'v'] else i
+                    break
+        if local_left == -1:
+            local_left = 0
+
 
         #forwards find right
-        inverse_b = 0 #lazy safety
+        local_right = -1
+        b = 0
         for i in range(idx+1, len(expr)):
             if expr[i] == "(":
-                inverse_b += 1
+                b += 1
             elif expr[i] == ")":
-                inverse_b -= 1
+                b -= 1
 
-            if inverse_b == 0:
-                local_right = i+1 
-                break
+            if b == 0:
+                if expr[i] in ['^', 'v'] or i == len(expr) - 1:
+                    local_right = i if expr[i] in ['^', 'v'] else i + 1
+                    break
+        if local_right == -1:
+            local_right = len(expr)
 
         return (local_left, local_right)
+
+    
+    def _AddBrackets(expr, left, right) -> str:
+        """
+        returns the expression with the brackets heh lol
+        'a^bvc'
+        and: [1]
+        and bracs: [(0, 3)]
+        or: [3]
+        or bracs: [(1, 5)]        
+        '(a^b)vc'
+
+        '(a^b)vc'
+        and: []
+        and bracs: []
+        or: [5]
+        or bracs: [(0, 7)]
+        '((a^b)vc)'
+        """
+        return expr[:left] + "(" + expr[left:right] + ")" + expr[right:]
+        
 
     def OrderOper(expr: str) -> str:
         """
         Precedence
-         AND >
-         OR
+         AND > OR
 
         ensure the LHS' become the RHS'
 
@@ -139,33 +165,37 @@ class FOLe:
         1. get list of top level op indicies
         """
 
-        and_idx = [] #lisst of index
-        or_idx = []
+        b = 0
+        and_idx = []
+        for i, c in enumerate(expr):
+            if c == "(":
+                b += 1
+            elif c == ")":
+                b -= 1
+
+            if b == 0 and c == "^":
+                and_idx.append(i)
+        
+        for i in reversed(and_idx):
+            left, right = FOLe._GetLocal(expr, i)
+            expr = FOLe._AddBrackets(expr, left, right)
 
         b = 0
+        or_idx = []
         for i, c in enumerate(expr):
             if c == "(":
                 b += 1
             elif c == ")":
                 b -= 1
             
-            if b == 0 and c == "^":
-                and_idx.append(i)
             if b == 0 and c == "v":
                 or_idx.append(i)
 
-        and_brackets_idx = []
-        or_brackets_idx = []
-        for i in and_idx:
-            and_brackets_idx.append(FOLe._GetLocal(expr, i))
-        for i in or_idx:
-            or_brackets_idx.append(FOLe._GetLocal(expr, i))
+        for i in reversed(or_idx):
+            left, right = FOLe._GetLocal(expr, i)
+            expr = FOLe._AddBrackets(expr, left, right)
 
-
-        print(f"and: {and_idx}")
-        print(f"and bracs: {and_brackets_idx}")
-        print(f"or: {or_idx}")
-        print(f"or bracs: {or_brackets_idx}")
+        return expr
         
 
     def SubstringOperation(expr: str) -> list[str]:
