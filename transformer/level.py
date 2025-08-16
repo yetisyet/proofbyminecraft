@@ -22,15 +22,13 @@ def GetLevel(Node):
          L=2    ^
               /   |
          L=1 v     v
-            / \   / |
+            / |   / |
       L=0  a  b  a   c
     """
 
     child_levels = [] #levels of the children
-    if Node.left == str:
+    if Node.type == :
         child_levels.append(0)
-    elif Node.right == str:
-        child_levels. append(0)
     else:
         child_levels.append(GetLevel(Node.left))
         child_levels.append(GetLevel(Node.right))
