@@ -12,6 +12,15 @@ from parser.parser import *
 #         self.type: Operation = None
 #         self.depth = 0
 
+def PrintTree(node):
+    """Prints tree in post order"""
+    if node == None:
+        return
+
+    PrintTree(node.left)
+    PrintTree(node.left)
+    print(node.type, end=' ')
+
 
 def GetLevel(node):
 
@@ -38,6 +47,7 @@ def GetLevel(node):
          L=1 ^     ^
             / |   / |
       L=0  a  b  a   c
+
     """
 
     child_level = [] #levels of the children
@@ -54,6 +64,9 @@ def GetLevel(node):
     node.level = 1 + max(child_level)
     return node.level
 
+test1 = "(a^b)v(a^c)"
+test2 = "(av(bvc))^~(a^(bvc))"
+edge1 = "a v b"
 
 
 
