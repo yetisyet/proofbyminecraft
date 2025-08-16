@@ -1,11 +1,12 @@
-from parser import Node
+# from parser import Node
 
 
 
-class Tree():
-    def __init__(self, depth, ):
+# class Tree():
+#     def __init__(self, depth, ):
+#         pass
         
 
-#n = CreateGraph(equation, depth = , parent: Node = None) -> Node:
-#n.depth = 0
-#nl = n.left
+# #n = CreateGraph(equation, depth = , parent: Node = None) -> Node:
+# #n.depth = 0
+# #nl = n.left

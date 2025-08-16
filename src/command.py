@@ -20,15 +20,16 @@ class Circuit:  # circuit holds all its logic gates
             elif modules.type == Operation.OR:
                 name = 'OR'
             elif modules.type == Operation.VAR: #position of levers
-                lever_code = f'''{{id:command_block_minecart,Command:"/setblock ~{modules.position[0]} ~ ~{modules.position[1]} lever replace"}}'''
+                lever_code = f'''{{id:command_block_minecart,Command:"/setblock ~{modules.position[0]} ~-2 ~{modules.position[1]-4} lever[face=floor] replace"}}'''
                 command.append(lever_code)
+                continue
             else:
                 continue
 
             code = f'''{{id:command_block_minecart,Command:"/summon armor_stand ~{modules.position[0]} ~-2 ~{modules.position[1]-4} {{Marker:1b,CustomName:\\"{name}\\",Tags:[placer]}}"}}'''
             command.append(code)
         
-        lantern_code = f'''{{id:command_block_minecart,Command:"/setblock ~{self.lamp_position.position[0]} ~ ~{self.lamp_position.position[1]} redstone_lamp replace"}},{{id:command_block_minecart,Command:"/setblock ~{self.lamp_position.position[0]} ~ ~{self.lamp_position.position[1]+1} redstone_wire replace"}}'''
+        lantern_code = f'''{{id:command_block_minecart,Command:"/setblock ~{self.lamp_position[0]} ~-2 ~{self.lamp_position[1]-5} redstone_lamp replace"}},{{id:command_block_minecart,Command:"/setblock ~{self.lamp_position[0]} ~-2 ~{self.lamp_position[1]-4} redstone_wire replace"}}'''
         command.append(lantern_code)
         
             
