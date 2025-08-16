@@ -22,7 +22,17 @@ from parser.parser import *
 #     return
 
 def GetLctn(node):
+    """return the an (x,y) coordinate tuple of a node"""
+
     out = () #tuple of (x, y) coords kinda
+    return
+
+def SetOffset(nodes: list[Node]):
+    """
+    takes list of nodes and then sets their offsets from left to right
+    """
+    for node in nodes:
+        node.offset = nodes.index(node)
     return
 
 def PostT(node):
@@ -39,9 +49,11 @@ def PostT(node):
     out.extend(PostT(node.left))
     out.extend(PostT(node.right))
 
-    if hasattr(node, 'var') and node.var is not None:
-        out.append(node)
-    elif hasattr(node, 'type'):
+    # if hasattr(node, 'var') and node.var is not None:
+    #     out.append(node.var)
+    # elif hasattr(node, 'type'):
+    #     out.append(node.type)
+    if node:
         out.append(node)
     else:
         out.append(None)
@@ -68,9 +80,9 @@ def GetLevel(node):
         level(node) = 1 + max(level(childs))
 
          (a^b)v(a^c)
-         L=2    v
+         L=2    OR
               /   |
-         L=1 ^     ^
+         L=1 AND   AND
             / |   / |
       L=0  a  b  a   c
 

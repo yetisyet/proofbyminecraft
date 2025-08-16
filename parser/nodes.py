@@ -5,10 +5,13 @@ class Node:
         self.parent: Node = None
         self.left: Node | str = None
         self.right: Node | str = None
+
         self.type: Operation = None
         self.var: str | None = None #var types have str data
+
         self.depth = 0 #number of parents to root
         self.level = 0 #testing maybe delete
+        self.offset = 0 #IDK
 
 
 class Operation(Enum):
