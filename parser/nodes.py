@@ -7,6 +7,7 @@ class Node:
         self.left: Node | str = None
         self.right: Node | str = None
         self.type: Operation = None
+        self.var: str | None = None
         self.depth = 0 #number of parents to root
 
         self.level = 0 #testing maybe delete

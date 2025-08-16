@@ -168,13 +168,21 @@ class FOLe:
         if FOLe.ContainsOperation(parts[1]):
             node.left = FOLe.CreateGraph(parts[1], depth+1, node)
         else:
-            node.left = parts[1]
+            child = Node()
+            child.type = Operation.VAR
+            child.var = parts[1]
+
+            node.left = child
         
         if len(parts) == 3:
             if FOLe.ContainsOperation(parts[2]):
                 node.right = FOLe.CreateGraph(parts[2], depth+1, node)
             else:
-                node.right = parts[2]
+                child = Node()
+                child.type = Operation.VAR
+                child.var = parts[2]
+
+                node.left = child
         
         return node
 
