@@ -3,7 +3,7 @@ from nodes import *
 from position import *
 
 class Circuit:  # circuit holds all its logic gates
-    def __init__(self, list_nodes:list[object], lamp_position:tuple(int,int)):
+    def __init__(self, list_nodes:list[object], lamp_position: tuple[int,int]):
         self.list_nodes = list_nodes
         self.lamp_position = lamp_position
         
