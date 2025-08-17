@@ -28,7 +28,8 @@ root.minsize(700, 500) #minimum size so it cant be intefecimally small
 # Configure grid to make the window resizable
 root.grid_columnconfigure(0, weight=1)
 root.grid_columnconfigure(1, weight=1)
-root.grid_rowconfigure(2, weight=1)
+# Corrected: Set weight on row 1 to allow the input/output frames to expand vertically
+root.grid_rowconfigure(1, weight=1) 
 
 # --- Virtual Keyboard Pop-up ---
 keyboard_window_instance = None  # Global variable to hold the single keyboard window instance
@@ -67,7 +68,7 @@ def open_keyboard_popup():
         key_frame.pack(padx=10, pady=10, expand=True)
         key_frame.grid_columnconfigure((0, 1, 2, 3, 4), weight=1)
 
-        keys = ["~", "(", ")", "v", "^"]
+        keys = ["a", "b", "c", "d", "e", "~", "(", ")", "v", "^"]
         for i, char in enumerate(keys):
             key_button = ctk.CTkButton(key_frame, text=char, width=40, height=40,
                                        command=lambda c=char: insert_char(c))
@@ -192,7 +193,8 @@ except FileNotFoundError: #oh no
 input_frame = ctk.CTkFrame(root)
 input_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 input_frame.grid_columnconfigure(0, weight=1)
-input_frame.grid_rowconfigure(3, weight=1)
+# Corrected: Set the weight for the row that contains the input text box
+input_frame.grid_rowconfigure(1, weight=1) 
 
 
 #imgoinginsanehelp
@@ -258,6 +260,7 @@ output_frame = ctk.CTkFrame(root)
 output_frame.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
 output_frame.grid_columnconfigure(0, weight=1)
 output_frame.grid_rowconfigure(1, weight=1)
+output_frame.grid_rowconfigure(2, weight=0) # Ensure the button row has space
 
 ctk.CTkLabel(output_frame, text="Output", font=("Arial", 16, "bold")).grid(row=0, column=0, padx=5, pady=5)
 
@@ -277,6 +280,22 @@ tutorial_button = ctk.CTkButton(
     command=open_tutorial_window
 )
 tutorial_button.place(relx=0.02, rely=0.02, anchor="nw")
+
+# --- New Function to Copy Output ---
+def copy_output_to_clipboard():
+    """Copies the content of the output_text widget to the clipboard."""
+    text_to_copy = output_text.get("0.0", "end-1c")
+    if text_to_copy:
+        root.clipboard_clear()
+        root.clipboard_append(text_to_copy)
+
+# --- New Button to Copy Output ---
+copy_button = ctk.CTkButton(
+    master=output_frame,
+    text="Copy Output",
+    command=copy_output_to_clipboard
+)
+copy_button.grid(row=2, column=0, padx=10, pady=5)
 
 
 #youtoob guy told me this was very important
