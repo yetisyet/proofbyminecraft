@@ -7,6 +7,14 @@ class Circuit:  # circuit holds all its logic gates
         self.list_nodes = list_nodes
         self.lamp_position = lamp_position
         self.redstone_locations = redstone_locations
+        different_colours = ['red', 'blue', 'green', 'orange', 'yellow', 'lightblue', 'cyan', 'lime', 'pink', 'magenta']
+        self.color_assignment = {}
+        indexer = 0
+        for modules in self.list_nodes: #assigns colors to levers
+            if modules.type == Operation.VAR:
+                if modules.var not in self.color_assignment:
+                    self.color_assignment[modules.var] = different_colours[indexer]
+                    indexer += 1
         
     def get_command(self):
         base_start = '''summon falling_block ~ ~1 ~ {BlockState:{Name:"redstone_block"},Time:1,Passengers:[{id:"falling_block",BlockState:{Name:"activator_rail"}}'''
@@ -23,6 +31,8 @@ class Circuit:  # circuit holds all its logic gates
             elif modules.type == Operation.VAR: #position of levers
                 lever_code = f'''{{id:command_block_minecart,Command:"/setblock ~{modules.position[0]} ~-2 ~{modules.position[1]-4} lever[face=floor] replace"}}'''
                 command.append(lever_code)
+                lever_color_code = f'''{{id:command_block_minecart,Command:"/setblock ~{modules.position[0]} ~-3 ~{modules.position[1]-4} {self.color_assignment[modules.var]}_concrete replace"}}'''
+                command.append(lever_color_code)
                 continue
             else:
                 continue
