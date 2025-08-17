@@ -78,6 +78,9 @@ class Arranger:
                         wire_locations.append((node.right.position[0], node.position[1]+2 + i))
                     if not (i+2) % 15 and i != node.right.position[1]-(1 if ChildIsVar else 2):
                         up_repeaters.append((node.right.position[0], node.position[1]+2 + i))
+                    # Blanket fix for edge case - (((((a^b)^c)^d)^e)^f)vg
+                    if (node.right.position[0], node.position[1]+3) in wire_locations and (node.right.position[0], node.position[1]+3) not in up_repeaters:
+                        up_repeaters.append((node.right.position[0], node.position[1]+3))
 
 
                 # wire_locations.extend([(i, node.position[1]+2) for i in range(node.position[0]+1, node.right.position[0]+1)])
