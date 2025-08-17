@@ -64,10 +64,16 @@ class Arranger:
             
             # Wire locations for right inputs
             if node.right:
+                # Horizontal wires
                 for i in range((node.right.position[0]+1) - (node.position[0]+1)):
                     wire_locations.append((node.position[0]+1 + i, node.position[1]+2))
                     if not (i+2) % 13 and i != (node.right.position[0]+1) - (node.position[0]+1) - 1:
                         left_repeaters.append((node.position[0]+1 + i, node.position[1]+2))
+                
+                # Vertical wires
+                for i in range(node.right.position[1]-(1 if ChildIsVar else 2) - (node.position[1]+2) + 1):
+                    if (node.right.position[0], node.position[1]+2 + i) not in wire_locations:
+                        wire_locations.append((node.right.position[0], node.position[1]+2 + i))
 
                 # wire_locations.extend([(i, node.position[1]+2) for i in range(node.position[0]+1, node.right.position[0]+1)])
         
