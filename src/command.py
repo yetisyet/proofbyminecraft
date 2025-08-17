@@ -63,16 +63,19 @@ class Circuit:  # circuit holds all its logic gates
         for nodes in self.list_nodes:
             xs.append(nodes.position[0])
             zs.append(nodes.position[1])
-            left_most = min(xs) - 1
-            right_most = max(xs) + 1
-            up_most = self.lamp_position[1] - 1
-            down_most = max(zs) + 1
+            left_most = min(xs) - 2
+            right_most = max(xs) + 2
+            up_most = self.lamp_position[1] - 2
+            down_most = max(zs) + 2
         
-        top_barrier = f'''{{id:command_block_minecart,Command:"/fill ~{left_most} ~-3 ~{modules.position[1]-4} ~{left_most} ~-3 ~{modules.position[1]-4} stone_bricks replace"}}'''
-        bottom_barrier = e
-        left_barrier = e
-        right_barrier = e
-
+        top_barrier = f'''{{id:command_block_minecart,Command:"/fill ~{left_most} ~-3 ~{up_most-4} ~{right_most} ~-3 ~{up_most-4} stone_bricks replace"}}'''
+        bottom_barrier = f'''{{id:command_block_minecart,Command:"/fill ~{left_most} ~-3 ~{down_most-4} ~{right_most} ~-3 ~{down_most-4} stone_bricks replace"}}'''
+        left_barrier = f'''{{id:command_block_minecart,Command:"/fill ~{left_most} ~-3 ~{up_most-4} ~{left_most} ~-3 ~{down_most-4} stone_bricks replace"}}'''
+        right_barrier = f'''{{id:command_block_minecart,Command:"/fill ~{right_most} ~-3 ~{up_most-4} ~{right_most} ~-3 ~{down_most-4} stone_bricks replace"}}'''
+        command.append(top_barrier)
+        command.append(bottom_barrier)
+        command.append(left_barrier)
+        command.append(right_barrier)
 
 
             
