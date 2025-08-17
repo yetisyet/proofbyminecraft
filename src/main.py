@@ -22,7 +22,7 @@ ctk.set_default_color_theme("blue")
 # Initialize the main window
 root = ctk.CTk()
 root.title("Proof by Minecraft")
-root.geometry("1000x800")
+root.geometry("800x600") # Increased default window size for better initial layout
 root.minsize(700, 500) #minimum size so it cant be intefecimally small
 
 # Configure grid to make the window resizable
@@ -193,15 +193,16 @@ except FileNotFoundError: #oh no
 input_frame = ctk.CTkFrame(root)
 input_frame.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 input_frame.grid_columnconfigure(0, weight=1)
-# Corrected: Set the weight for the row that contains the input text box
-input_frame.grid_rowconfigure(1, weight=1) 
-
+# Prioritize vertical space for the text box
+input_frame.grid_rowconfigure(1, weight=2) 
+# Give the tabview a lower vertical weight
+input_frame.grid_rowconfigure(4, weight=1)
 
 #imgoinginsanehelp
 ctk.CTkLabel(input_frame, text="Formula input", font=("Arial", 16, "bold")).grid(row=0, column=0, padx=5, pady=5)
 
 # Text widget for user input
-input_text = ctk.CTkTextbox(input_frame, height=200)
+input_text = ctk.CTkTextbox(input_frame, height=100) # Adjusted height
 input_text.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 input_text.insert("0.0", "Enter your logic statement here...")
 
@@ -239,8 +240,11 @@ input_text.bind("<FocusIn>", on_input_click)
 input_text.bind("<FocusOut>", on_focus_out)
 
 #redbull tastes terrible
-tabview = ctk.CTkTabview(input_frame)
-tabview.grid(row=4, column=0, padx=10, pady=10, sticky="nsew")
+
+#######the thing under the input
+
+#tabview = ctk.CTkTabview(input_frame)
+#tabview.grid(row=4, column=0, padx=10, pady=10, sticky="nsew")
 
 #statements_tab = tabview.add("Logic Statements")
 #statements_tab.grid_columnconfigure(0, weight=1)
@@ -265,7 +269,7 @@ output_frame.grid_rowconfigure(2, weight=0) # Ensure the button row has space
 ctk.CTkLabel(output_frame, text="Output", font=("Arial", 16, "bold")).grid(row=0, column=0, padx=5, pady=5)
 
 # ITS A TEXT BOX MORTY
-output_text = ctk.CTkTextbox(output_frame, height=200, width=400)
+output_text = ctk.CTkTextbox(output_frame, height=100, width=400) # Adjusted height
 output_text.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
 output_text.insert("0.0", "Your output will be displayed here.")
 
