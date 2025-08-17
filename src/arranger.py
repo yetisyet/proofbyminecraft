@@ -76,6 +76,9 @@ class Arranger:
                 for i in range(node.right.position[1]-(1 if ChildIsVar else 2) - (node.position[1]+2) + 1):
                     if (node.right.position[0], node.position[1]+2 + i) not in wire_locations:
                         wire_locations.append((node.right.position[0], node.position[1]+2 + i))
+                    if not (i+2) % 15 and i != node.right.position[1]-(1 if ChildIsVar else 2):
+                        up_repeaters.append((node.right.position[0], node.position[1]+2 + i))
+
 
                 # wire_locations.extend([(i, node.position[1]+2) for i in range(node.position[0]+1, node.right.position[0]+1)])
         
