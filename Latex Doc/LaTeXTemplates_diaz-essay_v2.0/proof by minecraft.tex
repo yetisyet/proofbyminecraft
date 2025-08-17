@@ -65,7 +65,7 @@ By embedding First Order Logic (FOL) expressions within Minecraft, we provide us
 \begin{itemize}
     \item \textbf{Parsing and Representation:} Logical expressions must be parsed into a graph/tree structure using graph theory and algorithmic simplification.  
     \item \textbf{User Interface:} A Python GUI (Tkinter) must allow users to input expressions, following Nielsen’s 10 heuristics for usability.  
-    \item \textbf{Minecraft Integration:} The parsed structure must be translated into a Minecraft world file, ensuring correct placement of redstone, lamps, and levers.  
+    \item \textbf{Minecraft Integration:} The parsed structure must be translated into a Minecraft world, ensuring correct placement of redstone, lamps, and levers.  
 \end{itemize}
 
 \subsubsection*{Goals}
@@ -97,6 +97,7 @@ them, and then produces both a truth table and a Minecraft redstone circuit.
     \item The parser outputs a clean, bracketed form ready for tree construction.
     \item We only need AND, OR, and NOT operators, as these are sufficient to express any logical expression. (Thank you Math1081)
     \item So our system will reduce any logical expression to a form that only uses these operators, then evaluates and compares them.
+    \item We used a post-order traversal to generate the final output and record important values about the nodes.
 \end{itemize}
 
 \subsubsection*{Graph Representation}
@@ -107,13 +108,7 @@ them, and then produces both a truth table and a Minecraft redstone circuit.
     \item Parent/child relationships encode logical structure, enabling recursive traversal.
     \item Example: $(a \wedge b) \vee c$ becomes an OR node at the root, with an 
     AND node and variable $c$ as children.
-    \item Before we fleshed out the idea of Trees (a subset of graph theory), we started with a more general case of graph theory. Thinking of redstone dust as edges, and logical expressions as vertices. This was a good idea, but it was too general, and we needed to be more specific about how we were going to analyze this in Python, and translate it to minecraft. This is when we realised we could use trees.
-    \begin{figure}[h]
-        \centering
-        \includegraphics[width=0.6\textwidth]{gt.png}
-        \caption{What graph theory looks like - with some examples of vertices and edges.}
-        \label{fig:graph_theory_example}
-    \end{figure}
+    
 \begin{center} % Centers the whole picture
 \begin{tikzpicture}[
   level distance=1.8cm,
@@ -141,8 +136,19 @@ them, and then produces both a truth table and a Minecraft redstone circuit.
     \label{fig:logic_gate}
 \end{figure}
 
+\item Compared to our tree, the logic gate representation emphasizes the flow of signals through the gates (which represent the different operators, in this case AND and OR), these operations are also expressed algebraically where AB (which is 'multiplied' and also sometimes represented as AxB, A*B, and A.B) represents $(a \wedge b)$ and A+B represents $(a \vee b)$. Whereas our tree structure highlights the hierarchical (parent/child) relationships between operations, this also makes traversal systems more effective, and easier to code - and to some - the tree diagram is more intuitive.
+\medskip
 
-\subsubsection*{Evaluation}
+\subitem *Note: Before we fleshed out the idea of Trees (a subset of graph theory), we started with a more general case of graph theory. Thinking of redstone dust as edges, and logical expressions as vertices. This was a good idea, but it was too general, and we needed to be more specific about how we were going to analyze this in Python, and translate it to minecraft. This is when we realised we could use trees.
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=0.6\textwidth]{gt.png}
+        \caption{What a standard graph in graph theory looks like - with some examples of vertices and edges.}
+        \label{fig:graph_theory_example}
+    \end{figure}
+\end{itemize}
+
+\subsection*{Evaluation}
 \begin{itemize}
     \item Once a tree is constructed, it can be recursively evaluated (with the method above) under any 
     assignment of truth values. 
@@ -153,8 +159,10 @@ them, and then produces both a truth table and a Minecraft redstone circuit.
 \end{itemize}
 
 \subsection{Brief Recap of Our Algorithm and how it interacts with truth tables}
-\item \textbf{Record Output:} For each truth assignment, record the result at the root node. This forms the complete truth table for the expression.
+\begin{itemize}
+    \item \textbf{Record Output:} For each truth assignment, record the result at the root node. This forms the complete truth table for the expression.
     \item \textbf{Compare Expressions:} If two expressions are provided, generate their truth tables in the same variable order. Compare each row; if all outputs match, the expressions are equivalent.
+\end{itemize}
 
 \section*{Comparison of Two Equivalent Expressions}
 
@@ -184,10 +192,11 @@ A & B & C & (A \land B) \lor C & (A \lor C) \land (B \lor C) \\
 
 \bigskip
 
-
-\item Since the truth tables are identical, the two expressions are equivalent.  
+\begin{itemize}
+    \item Since the truth tables are identical, the two expressions are equivalent.  
 This shows how the algorithm evaluates different syntactic forms but produces the same output. It essentially compares these two matrices line by line, and if they are equal, then the two expressions are equivalent.
 These truth tables will be produced in minecraft too, but with redstone lamps representing the truth values (on for true, off for false).
+\end{itemize}
 
 \section{Generation}
 
@@ -196,7 +205,7 @@ the final step of the pipeline is \textit{generation}: producing a Minecraft
 representation of the logic circuit. This process translates abstract
 logical structure into tangible in-game redstone components.
 
-\section{Design Challenges and Layout Considerations}
+\subsection{Design Challenges and Layout Considerations}
 
 Before presenting the full solution pipeline, we summarize the principal design
 difficulties encountered while mapping logical structure to a physical redstone
@@ -212,14 +221,10 @@ distance is therefore the $\ell_1$ (``taxi-cab'') metric
 \[
 d_1\big((x_1,z_1),(x_2,z_2)\big) \;=\; |x_1-x_2| + |z_1-z_2|,
 \]
-not the Euclidean metric. All routing must be realizable as rectilinear
-polylines on the integer grid.
+not the Euclidean metric.
 
-\paragraph{Non-intersection of wires.}
-Redstone dust cannot occupy the same block as another distinct wire segment
-with a crossing that preserves independent connectivity. Hence, naive shortest
-paths for different nets can conflict. Avoiding crossings while minimizing
-length is the classic orthogonal \emph{routing} problem.
+\paragraph{Non-intersection of wires and 'node bloating'.}
+Redstone dust cannot intersect, and adding nodes causes something I'd like to call 'node bloating', where - to prevent intersection of redstone dust - you must increase the distance between nodes, and since our NOT operation is of a different size, and it can depend on the 'parent' node as well, we needed to determine an algorithm for placement to prevent all of this.
 
 
 
@@ -269,11 +274,16 @@ length is the classic orthogonal \emph{routing} problem.
     is generated instantly in the Minecraft world.
 \end{itemize}
 
-
-
-%------------------------------------------------
-
 \section*{Conclusion}
 
+In this paper, we presented a novel approach to representing and manipulating logical expressions within the Minecraft environment. By leveraging the game's unique mechanics and our custom tools, we created a system that not only evaluates logical formulas but also visualizes them in an engaging and interactive way. 
+Our implementation highlights the potential of Minecraft as a platform for educational tools, particularly in the teaching of computer science and logic. The visual and interactive nature of the system allows students to explore logical operations in a hands-on manner, transforming abstract symbols into dynamic structures that respond to user interaction.\\
+
+\medskip
+To step outside the formal language for a moment: you might reasonably ask, \textit{why?} Especially if you have examined the underlying code, and the idea can appear eccentric. The truth is that this project is as much about novelty as utility. We are passionate about both logic and Minecraft, and the intersection of these two worlds is enticing (and again, quite unique and novel). 
+From a pedagogical perspective, however, the applications are very real. As a tutor myself, I frequently encounter students—particularly in Year 11 and 12 Engineering and Computer Science—who struggle to conceptualize logic gates and their behaviors. For many, the topic feels tedious and unintuitive. 
+A system such as ours provides an alternative mode of engagement, allowing learners to \emph{see} and \emph{interact} (and to be honest, the best word to use here is just play.) with logical structures, rather than simply manipulating them on paper.
+
+In this way, our work demonstrates how playful environments like Minecraft can serve as serious educational tools, making difficult concepts more accessible, intuitive, and perhaps most importantly - enjoyable.
 
 \end{document}
