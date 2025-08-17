@@ -8,6 +8,7 @@ class Circuit:  # circuit holds all its logic gates
         self.list_nodes = list_nodes
         self.lamp_position = lamp_position
         self.redstone_locations = redstone_locations
+
         different_colours = ['red', 'blue', 'green', 'orange', 'yellow', 'lightblue', 'cyan', 'lime', 'pink', 'magenta']
         self.color_assignment = {}
         indexer = 0
@@ -22,9 +23,9 @@ class Circuit:  # circuit holds all its logic gates
 
         base_start = '''summon falling_block ~ ~1 ~ {BlockState:{Name:"redstone_block"},Time:1,Passengers:[{id:"falling_block",BlockState:{Name:"activator_rail"}}'''
         base_end = '''{id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='NOT'] run fill ~1 ~-1 ~1 ~-1 ~-1 ~-1 red_wool replace"},{id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='OR'] run fill ~1 ~-1 ~1 ~-1 ~-1 ~-1 light_blue_wool replace"},{id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='AND'] run fill ~1 ~-1 ~1 ~-1 ~-1 ~-1 orange_wool replace"},{id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='NOT'] run setblock ~ ~ ~ red_wool replace"},{id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='NOT'] run setblock ~ ~ ~-1 redstone_wall_torch[facing=north]"}, {id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='NOT'] run setblock ~ ~ ~1 redstone_wire"}, {id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='OR'] run setblock ~-1 ~ ~1 minecraft:repeater[facing=south] replace"}, {id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='OR'] run setblock ~1 ~ ~1 minecraft:repeater[facing=south] replace"},{id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='OR'] run fill ~1 ~ ~ ~-1 ~ ~ minecraft:light_blue_wool replace"},{id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='OR'] run fill ~ ~ ~ ~ ~ ~-1 minecraft:redstone_wire replace"},{id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='AND'] run fill ~1 ~ ~ ~-1 ~ ~ minecraft:orange_wool replace"}, {id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='AND'] run setblock ~-1 ~ ~1 minecraft:redstone_wire replace"}, {id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='AND'] run setblock ~1 ~ ~1 minecraft:redstone_wire replace"}, {id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='AND'] run fill ~-1 ~1 ~ ~1 ~1 ~ minecraft:redstone_torch replace"}, {id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='AND'] run setblock ~ ~1 ~ minecraft:redstone_wire replace"}, {id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='AND'] run setblock ~ ~ ~-1 redstone_wall_torch[facing=north]"}, {id:command_block_minecart,Command:"/kill @e[type=minecraft:armor_stand,tag=placer]"}, {id:command_block_minecart,Command:"setblock ~ ~ ~1 command_block{Command:\\"fill ~ ~-1 ~-1 ~ ~ ~ air\\"} replace"},{id:command_block_minecart,Command:"setblock ~ ~-1 ~1 redstone_block"},{id:command_block_minecart,Command:"kill @e[type=command_block_minecart,distance=0..2]"}]}'''
-        command = [base_start]
+        command = [base_start] #open command
 
-        #Bounding box
+        #Bounding box coordinates
         xs = []
         zs = []
         for nodes in self.list_nodes:
@@ -34,11 +35,12 @@ class Circuit:  # circuit holds all its logic gates
             right_most = max(xs) + 2
             up_most = self.lamp_position[1] - 3
             down_most = max(zs) + 2
-        
+
+        #Displaying expression above
         center = ((right_most/2),(up_most/2))
         title = f'''{{id:command_block_minecart,Command:"/summon text_display ~{center[0]} ~2 ~{center[1]-4} {{transformation:{{left_rotation:[0f,0f,0f,1f], right_rotation:[0f,0f,0f,1f], translation:[0f,0f,0f], scale:[5f,5f,5f]}},billboard: 'center', text:{{bold:true, color:white, text:'{expr.strip()}'}}}}"}}'''
         command.append(title)
-        
+
         rightmost_x = 0
         for node in self.list_nodes:
             if node.position[0] > rightmost_x:
@@ -51,7 +53,7 @@ class Circuit:  # circuit holds all its logic gates
                 vars[node.var] = False
         
         vars = dict(sorted(vars.items()))
-        
+
         barrier_material = 'smooth_stone'
         base_material = 'smooth_sandstone'
 
@@ -59,7 +61,10 @@ class Circuit:  # circuit holds all its logic gates
             if i != 0:
                 left_most += offset_x
                 right_most += offset_x
+                #choosing box materials
+        
 
+            #Placing box
             top_barrier = f'''{{id:command_block_minecart,Command:"/fill ~{left_most} ~-3 ~{up_most-4} ~{right_most} ~-3 ~{up_most-4} {barrier_material} replace"}}'''
             bottom_barrier = f'''{{id:command_block_minecart,Command:"/fill ~{left_most} ~-3 ~{down_most-4} ~{right_most} ~-3 ~{down_most-4} {barrier_material} replace"}}'''
             left_barrier = f'''{{id:command_block_minecart,Command:"/fill ~{left_most} ~-3 ~{up_most-4} ~{left_most} ~-3 ~{down_most-4} {barrier_material} replace"}}'''
@@ -70,6 +75,8 @@ class Circuit:  # circuit holds all its logic gates
             command.append(bottom_barrier)
             command.append(left_barrier)
             command.append(right_barrier)
+
+        
 
             for j in range(len(self.list_nodes)):
                 self.list_nodes[j].position = (self.list_nodes[j].position[0]+ (0 if i == 0 else offset_x), self.list_nodes[j].position[1])
@@ -84,6 +91,7 @@ class Circuit:  # circuit holds all its logic gates
                 for j in range(len(keys)):
                     vars[keys[j]] = ((i >> (len(keys)-1-j)) & 1) == 1
 
+            #placing the modules and levers
             for modules in self.list_nodes:
                 if modules.type == Operation.NOT:
                     name = 'NOT'
@@ -115,7 +123,8 @@ class Circuit:  # circuit holds all its logic gates
 
                 code = f'''{{id:command_block_minecart,Command:"/summon armor_stand ~{modules.position[0]} ~-2 ~{modules.position[1]-4} {{Marker:1b,CustomName:\\"{name}\\",Tags:[placer]}}"}}'''
                 command.append(code)
-            
+
+            #placing lantern
             lantern_code = f'''{{id:command_block_minecart,Command:"/setblock ~{self.lamp_position[0]} ~-2 ~{self.lamp_position[1]-5} redstone_lamp replace"}},{{id:command_block_minecart,Command:"/setblock ~{self.lamp_position[0]} ~-2 ~{self.lamp_position[1]-4} redstone_wire replace"}}'''
             command.append(lantern_code)
             
@@ -137,10 +146,9 @@ class Circuit:  # circuit holds all its logic gates
 
 
             
-        command.append(base_end)
+        command.append(base_end) #close command
         command = ",".join(command)
         
-        # print(command)
         return(command)
 
 
