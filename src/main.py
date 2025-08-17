@@ -228,7 +228,7 @@ def submit_button_action():
         processed_output = process_input(user_input)
     elif arguments_var.get() == "Truthtable":
         # Call the new function for truth tables
-        processed_output = process_truthtable(user_input)
+        processed_output = process_input(user_input, True)
     else:
         processed_output = "Please select a logic type to process."
 
