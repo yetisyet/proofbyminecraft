@@ -12,7 +12,7 @@ class Circuit:  # circuit holds all its logic gates
         indexer = 0
         for modules in self.list_nodes: #assigns colors to levers
             if modules.type == Operation.VAR:
-                if modules.var not in self.color_assignment:
+                if modules.var not in self.color_assignment and indexer < len(different_colours):
                     self.color_assignment[modules.var] = different_colours[indexer]
                     indexer += 1
         
@@ -20,6 +20,33 @@ class Circuit:  # circuit holds all its logic gates
         base_start = '''summon falling_block ~ ~1 ~ {BlockState:{Name:"redstone_block"},Time:1,Passengers:[{id:"falling_block",BlockState:{Name:"activator_rail"}}'''
         base_end = '''{id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='NOT'] run fill ~1 ~-1 ~1 ~-1 ~-1 ~-1 red_wool replace"},{id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='OR'] run fill ~1 ~-1 ~1 ~-1 ~-1 ~-1 light_blue_wool replace"},{id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='AND'] run fill ~1 ~-1 ~1 ~-1 ~-1 ~-1 orange_wool replace"},{id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='NOT'] run setblock ~ ~ ~ red_wool replace"},{id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='NOT'] run setblock ~ ~ ~-1 redstone_wall_torch[facing=north]"}, {id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='NOT'] run setblock ~ ~ ~1 redstone_wire"}, {id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='OR'] run fill ~1 ~ ~ ~-1 ~ ~ minecraft:light_blue_wool replace"}, {id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='OR'] run fill ~ ~ ~ ~ ~ ~-1 minecraft:redstone_wire replace"}, {id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='OR'] run setblock ~-1 ~ ~1 minecraft:repeater[facing=south] replace"}, {id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='OR'] run setblock ~1 ~ ~1 minecraft:repeater[facing=south] replace"},{id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='AND'] run fill ~1 ~ ~ ~-1 ~ ~ minecraft:orange_wool replace"}, {id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='AND'] run setblock ~-1 ~ ~1 minecraft:redstone_wire replace"}, {id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='AND'] run setblock ~1 ~ ~1 minecraft:redstone_wire replace"}, {id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='AND'] run fill ~-1 ~1 ~ ~1 ~1 ~ minecraft:redstone_torch replace"}, {id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='AND'] run setblock ~ ~1 ~ minecraft:redstone_wire replace"}, {id:command_block_minecart,Command:"/execute at @e[type=minecraft:armor_stand,name='AND'] run setblock ~ ~ ~-1 redstone_wall_torch[facing=north]"}, {id:command_block_minecart,Command:"/kill @e[type=minecraft:armor_stand,tag=placer]"}, {id:command_block_minecart,Command:"setblock ~ ~ ~1 command_block{Command:\\"fill ~ ~-1 ~-1 ~ ~ ~ air\\"} replace"},{id:command_block_minecart,Command:"setblock ~ ~-1 ~1 redstone_block"},{id:command_block_minecart,Command:"kill @e[type=command_block_minecart,distance=0..2]"}]}'''
         command = [base_start]
+
+        #Bounding box
+        xs = []
+        zs = []
+        for nodes in self.list_nodes:
+            xs.append(nodes.position[0])
+            zs.append(nodes.position[1])
+            left_most = min(xs) - 2
+            right_most = max(xs) + 2
+            up_most = self.lamp_position[1] - 3
+            down_most = max(zs) + 2
+        
+        barrier_material = 'smooth_stone'
+        base_material = 'smooth_sandstone'
+
+        top_barrier = f'''{{id:command_block_minecart,Command:"/fill ~{left_most} ~-3 ~{up_most-4} ~{right_most} ~-3 ~{up_most-4} {barrier_material} replace"}}'''
+        bottom_barrier = f'''{{id:command_block_minecart,Command:"/fill ~{left_most} ~-3 ~{down_most-4} ~{right_most} ~-3 ~{down_most-4} {barrier_material} replace"}}'''
+        left_barrier = f'''{{id:command_block_minecart,Command:"/fill ~{left_most} ~-3 ~{up_most-4} ~{left_most} ~-3 ~{down_most-4} {barrier_material} replace"}}'''
+        right_barrier = f'''{{id:command_block_minecart,Command:"/fill ~{right_most} ~-3 ~{up_most-4} ~{right_most} ~-3 ~{down_most-4} {barrier_material} replace"}}'''
+        base = f'''{{id:command_block_minecart,Command:"/fill ~{left_most} ~-3 ~{up_most-4} ~{right_most} ~-3 ~{down_most-4} {base_material} replace"}}'''
+        command.append(base)
+        command.append(top_barrier)
+        command.append(bottom_barrier)
+        command.append(left_barrier)
+        command.append(right_barrier)
+
+        
 
         for modules in self.list_nodes:
             if modules.type == Operation.NOT:
@@ -33,6 +60,12 @@ class Circuit:  # circuit holds all its logic gates
                 command.append(lever_code)
                 lever_color_code = f'''{{id:command_block_minecart,Command:"/setblock ~{modules.position[0]} ~-3 ~{modules.position[1]-4} {self.color_assignment[modules.var]}_concrete replace"}}'''
                 command.append(lever_color_code)
+                if self.color_assignment[modules.var] == 'orange':
+                    lever_label = f'''{{id:command_block_minecart,Command:"/summon text_display ~{modules.position[0]} ~-1.3 ~{modules.position[1]-4} {{transformation:{{left_rotation:[0f,0f,0f,1f], right_rotation:[0f,0f,0f,1f], translation:[0f,0f,0f], scale:[1.7f,1.7f,1.7f]}},billboard:'center', text:{{bold:true, color:gold, text:'{modules.var}'}}}}"}}'''
+                    command.append(lever_label)
+                else:
+                    lever_label = f'''{{id:command_block_minecart,Command:"/summon text_display ~{modules.position[0]} ~-1.3 ~{modules.position[1]-4} {{transformation:{{left_rotation:[0f,0f,0f,1f], right_rotation:[0f,0f,0f,1f], translation:[0f,0f,0f], scale:[1.7f,1.7f,1.7f]}},billboard: 'center', text:{{bold:true, color:{self.color_assignment[modules.var]}, text:'{modules.var}'}}}}"}}'''
+                    command.append(lever_label)
                 continue
             else:
                 continue
@@ -57,25 +90,7 @@ class Circuit:  # circuit holds all its logic gates
         for pos in self.redstone_locations[2]:
             command.append(f'''{{id:command_block_minecart,Command:"/setblock ~{pos[0]} ~-2 ~{pos[1]-4} repeater[facing=east] replace"}}''')
 
-        #Bounding box
-        xs = []
-        zs = []
-        for nodes in self.list_nodes:
-            xs.append(nodes.position[0])
-            zs.append(nodes.position[1])
-            left_most = min(xs) - 2
-            right_most = max(xs) + 2
-            up_most = self.lamp_position[1] - 2
-            down_most = max(zs) + 2
         
-        top_barrier = f'''{{id:command_block_minecart,Command:"/fill ~{left_most} ~-3 ~{up_most-4} ~{right_most} ~-3 ~{up_most-4} stone_bricks replace"}}'''
-        bottom_barrier = f'''{{id:command_block_minecart,Command:"/fill ~{left_most} ~-3 ~{down_most-4} ~{right_most} ~-3 ~{down_most-4} stone_bricks replace"}}'''
-        left_barrier = f'''{{id:command_block_minecart,Command:"/fill ~{left_most} ~-3 ~{up_most-4} ~{left_most} ~-3 ~{down_most-4} stone_bricks replace"}}'''
-        right_barrier = f'''{{id:command_block_minecart,Command:"/fill ~{right_most} ~-3 ~{up_most-4} ~{right_most} ~-3 ~{down_most-4} stone_bricks replace"}}'''
-        command.append(top_barrier)
-        command.append(bottom_barrier)
-        command.append(left_barrier)
-        command.append(right_barrier)
 
 
             
