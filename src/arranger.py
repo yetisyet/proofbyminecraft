@@ -87,13 +87,13 @@ class Arranger:
         
         return [wire_locations, up_repeaters, left_repeaters]
 
-def do_shit(expr):
+def do_shit(expr, truth_table=False):
     root = FOLe.CreateGraph(expr)
     
     nodes = Arranger.ArrangeGates(root)
     
     circuit = command.Circuit(nodes, (root.position[0], root.position[1]-2), Arranger.ArrangeRedstone(nodes))
-    print(circuit.get_command())
+    print(circuit.get_command(truth_table))
 
 if __name__ == "__main__" and False:
     print(f"test2: {test2}")
