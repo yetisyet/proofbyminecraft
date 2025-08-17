@@ -64,6 +64,8 @@ class Arranger:
             
             # Wire locations for right inputs
             if node.right:
+                ChildIsVar = node.right.type == Operation.VAR
+
                 # Horizontal wires
                 for i in range((node.right.position[0]+1) - (node.position[0]+1)):
                     wire_locations.append((node.position[0]+1 + i, node.position[1]+2))
