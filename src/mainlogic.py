@@ -25,7 +25,7 @@ def ValidInput(expr) -> bool:
     else: 
         return False
 
-def process_input(expr) -> str:
+def process_input(expr, truth_table: bool = False) -> str:
     """This function processes the text passed to it and returns command
     for gui shit."""
 
@@ -33,7 +33,7 @@ def process_input(expr) -> str:
         root = FOLe.CreateGraph(expr.strip())
         nodes = Arranger.ArrangeGates(root)
         circuit = Circuit(nodes, (root.position[0], root.position[1]-2), Arranger.ArrangeRedstone(nodes))
-        out = circuit.get_command()
+        out = circuit.get_command(truth_table)
     except Exception as e:
         return f'processing error: {e}'
 
