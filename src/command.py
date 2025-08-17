@@ -56,6 +56,11 @@ class Circuit:  # circuit holds all its logic gates
         # Place left facing repeaters
         for pos in self.redstone_locations[2]:
             command.append(f'''{{id:command_block_minecart,Command:"/setblock ~{pos[0]} ~-2 ~{pos[1]-4} repeater[facing=east] replace"}}''')
+
+        #Bounding box
+        #for nodes in self.list_nodes:
+
+
             
         command.append(base_end)
         command = ",".join(command)
