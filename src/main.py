@@ -223,10 +223,10 @@ def submit_button_action():
     processed_output = ""
     
     # Check which radio button is selected
-    if statements_var.get() == "StatementEvaluation":
+    if logic_type_var.get() == "StatementEvaluation":
         # Call the existing function for normal logic
         processed_output = process_input(user_input)
-    elif arguments_var.get() == "Truthtable":
+    elif logic_type_var.get() == "Truthtable":
         # Call the new function for truth tables
         processed_output = process_input(user_input, True)
     else:
@@ -263,15 +263,15 @@ input_text.bind("<FocusOut>", on_focus_out)
 tabview = ctk.CTkTabview(input_frame)
 tabview.grid(row=4, column=0, padx=10, pady=10, sticky="nsew")
 
-statements_tab = tabview.add("Normal Logic")
-statements_tab.grid_columnconfigure(0, weight=1)
-statements_var = ctk.StringVar(value="None")
-ctk.CTkRadioButton(statements_tab, text="Statement Evaluation", variable=statements_var, value="StatementEvaluation").pack(anchor="w", padx=10, pady=5)
+# Use a single tab with a different name
+single_tab = tabview.add("Select Logic Type")
+single_tab.grid_columnconfigure(0, weight=1)
+logic_type_var = ctk.StringVar(value="None")
 
-arguments_tab = tabview.add("Truth Table")
-arguments_tab.grid_columnconfigure(0, weight=1)
-arguments_var = ctk.StringVar(value="None")
-ctk.CTkRadioButton(arguments_tab, text="Truth Table", variable=arguments_var, value="Truthtable").pack(anchor="w", padx=10, pady=5)
+# Place both radio buttons in the single tab
+ctk.CTkRadioButton(single_tab, text="Statement Evaluation", variable=logic_type_var, value="StatementEvaluation").pack(anchor="w", padx=10, pady=5)
+ctk.CTkRadioButton(single_tab, text="Truth Table", variable=logic_type_var, value="Truthtable").pack(anchor="w", padx=10, pady=5)
+
 
 # ITS A OUTPUT FRAME MORTY
 output_frame = ctk.CTkFrame(root)
