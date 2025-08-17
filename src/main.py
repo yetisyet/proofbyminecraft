@@ -130,8 +130,8 @@ def open_tutorial_window():
 #lets make it look nice
 try:
     icon_size = 40
-    light_mode_icon_path = "../PROOFBYMINECRAFT/GUI/light_mode.png"
-    dark_mode_icon_path = "../PROOFBYMINECRAFT/GUI/dark_mode.png" #PNG NOT VSG TIKINER DOES NOT SUPPORT SVG AAAAAAåååååå
+    light_mode_icon_path = "GUI/light_mode.png"
+    dark_mode_icon_path = "GUI/dark_mode.png" #PNG NOT VSG TIKINER DOES NOT SUPPORT SVG AAAAAAåååååå
 
     pil_light_mode_icon = Image.open(light_mode_icon_path)
     pil_dark_mode_icon = Image.open(dark_mode_icon_path)
@@ -179,7 +179,7 @@ image_frame_top = ctk.CTkFrame(root, fg_color="transparent")
 image_frame_top.grid(row=0, column=0, columnspan=2, padx=10, pady=10)
 
 try:
-    image_path = "../PROOFBYMINECRAFT/GUI/combination.png"
+    image_path = "GUI/combination.png"
     pil_main_image = Image.open(image_path)
     main_image = ctk.CTkImage(light_image=pil_main_image, size=pil_main_image.size)
     main_label = ctk.CTkLabel(image_frame_top, image=main_image, text="")
@@ -240,11 +240,8 @@ input_text.bind("<FocusIn>", on_input_click)
 input_text.bind("<FocusOut>", on_focus_out)
 
 #redbull tastes terrible
-
-#######the thing under the input
-
-#tabview = ctk.CTkTabview(input_frame)
-#tabview.grid(row=4, column=0, padx=10, pady=10, sticky="nsew")
+tabview = ctk.CTkTabview(input_frame)
+tabview.grid(row=4, column=0, padx=10, pady=10, sticky="nsew")
 
 #statements_tab = tabview.add("Logic Statements")
 #statements_tab.grid_columnconfigure(0, weight=1)
