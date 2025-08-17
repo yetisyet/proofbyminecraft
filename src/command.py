@@ -58,7 +58,21 @@ class Circuit:  # circuit holds all its logic gates
             command.append(f'''{{id:command_block_minecart,Command:"/setblock ~{pos[0]} ~-2 ~{pos[1]-4} repeater[facing=east] replace"}}''')
 
         #Bounding box
-        #for nodes in self.list_nodes:
+        xs = []
+        zs = []
+        for nodes in self.list_nodes:
+            xs.append(nodes.position[0])
+            zs.append(nodes.position[1])
+            left_most = min(xs) - 1
+            right_most = max(xs) + 1
+            up_most = self.lamp_position[1] - 1
+            down_most = max(zs) + 1
+        
+        top_barrier = f'''{{id:command_block_minecart,Command:"/fill ~{left_most} ~-3 ~{modules.position[1]-4} ~{left_most} ~-3 ~{modules.position[1]-4} stone_bricks replace"}}'''
+        bottom_barrier = e
+        left_barrier = e
+        right_barrier = e
+
 
 
             
