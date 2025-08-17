@@ -51,7 +51,6 @@ By embedding First Order Logic (FOL) expressions within Minecraft, we provide us
 \subsubsection*{Key Ideas}
 \begin{itemize}
     \item Each FOL expression is represented as a Minecraft world where levers act as input variables and redstone lamps display output values.  
-    \item When two expressions are entered, they are rendered side by side with shared inputs, enabling direct comparison.  
     \item To evaluate equivalence, the program systematically generates all input cases ($2^n$ possibilities)* and maps them into Minecraft.
     \begin{itemize}
         \item *The reason there are $2^n$ cases is because for each event there are two possible values, true or false. So for $n$ events, there are \[
@@ -70,7 +69,7 @@ By embedding First Order Logic (FOL) expressions within Minecraft, we provide us
 
 \subsubsection*{Goals}
 \begin{itemize}
-    \item Provide an engaging, gamified method to explore logical proofs.  
+    \item Provide an engaging, gamified method to explore and understand formal logic.  
     \item Demonstrate how graph theory and algorithms can be applied creatively.  
     \item Produce both a truth table and equivalence check alongside the Minecraft visualization.  
 \end{itemize}
@@ -84,9 +83,9 @@ By embedding First Order Logic (FOL) expressions within Minecraft, we provide us
 
 The overall architecture of \textit{Proof by Minecraft} can be broken into four
 main components: parsing, graph representation, evaluation, and Minecraft
-world generation. Together these steps form a pipeline: a user enters one
-or two First Order Logic (FOL) expressions, the system parses and evaluates
-them, and then produces both a truth table and a Minecraft redstone circuit.
+world generation. Together these steps form a pipeline: a user enters a
+First Order Logic (FOL) expression, the system parses and evaluates
+it, and then produces both a truth table (in the form of redstone lamps adjacent to the levers) and a Minecraft redstone circuit.
 
 \subsubsection*{Parser}
 \begin{itemize}
@@ -94,9 +93,8 @@ them, and then produces both a truth table and a Minecraft redstone circuit.
     \item Operators supported include AND ($\wedge$), OR ($\vee$), and NOT ($\sim$).
     \item Bracketing ensures operator precedence is correctly maintained, with 
     special care taken for NOTs.
-    \item The parser outputs a clean, bracketed form ready for tree construction.
+    \item The parser sanitises and formats the input expression.
     \item We only need AND, OR, and NOT operators, as these are sufficient to express any logical expression. (Thank you Math1081)
-    \item So our system will reduce any logical expression to a form that only uses these operators, then evaluates and compares them.
     \item We used a post-order traversal to generate the final output and record important values about the nodes.
 \end{itemize}
 
@@ -150,18 +148,13 @@ them, and then produces both a truth table and a Minecraft redstone circuit.
 
 \subsection*{Evaluation}
 \begin{itemize}
-    \item Once a tree is constructed, it can be recursively evaluated (with the method above) under any 
-    assignment of truth values. 
+    \item Once a tree is constructed, it can be recursively evaluated (with the method above) under any assignment of truth values.
     \item This process generates a complete truth table for the input variables.
-    \item Equivalence between two expressions is determined by comparing truth 
-    tables row by row. Every row of each truth table must be exactly equal for the expressions to be considered equivalent.
-	\item I will show an example of this in the following section, to show you how you (and our algorithm) can evaluate the equivalence of two expressions.
 \end{itemize}
 
 \subsection{Brief Recap of Our Algorithm and how it interacts with truth tables}
 \begin{itemize}
-    \item \textbf{Record Output:} For each truth assignment, record the result at the root node. This forms the complete truth table for the expression.
-    \item \textbf{Compare Expressions:} If two expressions are provided, generate their truth tables in the same variable order. Compare each row; if all outputs match, the expressions are equivalent.
+    \item \textbf{Record Output:} For each truth assignment, record the result at the root node. This forms the complete truth table for the expression. 
 \end{itemize}
 
 \section*{Comparison of Two Equivalent Expressions}
