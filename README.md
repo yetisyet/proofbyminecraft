@@ -32,5 +32,7 @@ This project is about creating a generator which makes a Minecraft world represe
 -----
 ### Installation Instructions:
 
-Todo 
+Just download and run Main.py using your IDE.
+
+sorry for not compiling
 
