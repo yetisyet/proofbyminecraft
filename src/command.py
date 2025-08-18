@@ -125,11 +125,7 @@ class Circuit:  # circuit holds all its logic gates
         command.append(spawn_nodes)
 
 
-        # Set some binary type shit
-        if truth_table:
-            keys = list(vars.keys())
-            for j in range(len(keys)):
-                vars[keys[j]] = ((i >> (len(keys)-1-j)) & 1) == 1
+        
 
 
 
@@ -158,6 +154,12 @@ class Circuit:  # circuit holds all its logic gates
 
 
         for i in range(1 if not truth_table else (2 ** len(vars))):
+
+            #Deciding truth table lever on or off
+            keys = list(vars.keys())
+            for j in range(len(keys)):
+                vars[keys[j]] = ((i >> (len(keys)-1-j)) & 1) == 1
+
             if i != 0:
                 left_most += offset_x
                 right_most += offset_x
@@ -166,7 +168,7 @@ class Circuit:  # circuit holds all its logic gates
                 structure_block_load = f'''{{id:command_block_minecart,Command:"setblock ~{left_most-1} ~-2 ~{up_most-5} structure_block[mode=load]{{name:'module',posX:0,posY:-1,posZ:0,sizeX:{structure_x},sizeY:5,sizeZ:{structure_y},rotation:'NONE',mirror:'NONE',mode:'LOAD',ignoreEntities:0b,showboundingbox:1b}} replace"}},{{id:command_block_minecart,Command:"setblock ~{left_most-1} ~-1 ~{up_most-5} redstone_block"}}'''
                 command.extend([structure_block_load])
 
-                #truth tables levers
+                #placing truth tables levers
                 for modules in self.list_nodes:
                     if modules.type == Operation.VAR: 
                         lever_powered = vars[modules.var]
