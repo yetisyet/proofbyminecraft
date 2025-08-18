@@ -9,7 +9,7 @@ class Circuit:  # circuit holds all its logic gates
         self.lamp_position = lamp_position
         self.redstone_locations = redstone_locations
 
-        different_colours = ['red', 'blue', 'green', 'orange', 'yellow', 'lightblue', 'cyan', 'lime', 'pink', 'magenta','brown','light_gray','gray','white','black']
+        different_colours = ['red', 'blue', 'green', 'orange', 'yellow', 'lightblue', 'cyan', 'lime', 'pink', 'magenta','purple', 'brown','light_gray','gray','white','black']
         self.color_assignment = {}
         indexer = 0
         for modules in self.list_nodes: #assigns colors to levers
