@@ -9,7 +9,7 @@ class Circuit:  # circuit holds all its logic gates
         self.lamp_position = lamp_position
         self.redstone_locations = redstone_locations
 
-        different_colours = ['red', 'blue', 'green', 'orange', 'yellow', 'lightblue', 'cyan', 'lime', 'pink', 'magenta']
+        different_colours = ['red', 'blue', 'green', 'orange', 'yellow', 'lightblue', 'cyan', 'lime', 'pink', 'magenta','brown','light_gray','gray','white','black']
         self.color_assignment = {}
         indexer = 0
         for modules in self.list_nodes: #assigns colors to levers
@@ -45,12 +45,15 @@ class Circuit:  # circuit holds all its logic gates
         title = f'{{id:command_block_minecart,Command:"summon text_display ~{center[0]} ~2 ~{center[1]-4} {{transformation:{{left_rotation:[0f,0f,0f,1f],right_rotation:[0f,0f,0f,1f],translation:[0f,0f,0f],scale:[5f,5f,5f]}},billboard:\'center\',text:{{bold:true,color:white,text:\'{expr.strip()}\'}}}}"}}'
         command.append(title)
 
+        #seperation on nodes??
         rightmost_x = 0
         for node in self.list_nodes:
             if node.position[0] > rightmost_x:
                 rightmost_x = node.position[0]
         offset_x = rightmost_x + 3
 
+
+        #finding the levers which are on and off for the truth table
         vars = {}
         for node in self.list_nodes:
             if node.var:
@@ -65,6 +68,7 @@ class Circuit:  # circuit holds all its logic gates
         self.redstone_locations = arranger.Arranger.ArrangeRedstone(self.list_nodes)
         self.lamp_position = (self.lamp_position[0], self.lamp_position[1])
 
+
         #placing the modules and levers
         for modules in self.list_nodes:
             if modules.type == Operation.NOT:
@@ -74,17 +78,14 @@ class Circuit:  # circuit holds all its logic gates
             elif modules.type == Operation.OR:
                 name = 'OR'
             elif modules.type == Operation.VAR: #position of levers
-                lever_powered = False
-                if truth_table:
-                    lever_powered = vars[modules.var]
-                lever_powered_string = "true" if lever_powered else "false"
-                lever_code = f'''{{id:command_block_minecart,Command:"setblock ~{modules.position[0]} ~-2 ~{modules.position[1]-4} lever[face=floor,powered={lever_powered_string}]"}}'''
+                lever_code = f'''{{id:command_block_minecart,Command:"setblock ~{modules.position[0]} ~-2 ~{modules.position[1]-4} lever[face=floor,powered=false]"}}'''
                 command.append(lever_code)
-                lever_lamp__code = f'''{{id:command_block_minecart,Command:"setblock ~{modules.position[0]} ~-3 ~{modules.position[1]-3} redstone_lamp[lit={lever_powered_string}]"}}'''
-                command.append(lever_lamp__code)
 
+                #placing variable colour
                 lever_color_code = f'''{{id:command_block_minecart,Command:"setblock ~{modules.position[0]} ~-3 ~{modules.position[1]-4} {self.color_assignment[modules.var]}_concrete"}}'''
                 command.append(lever_color_code)
+
+                #placing lever names
                 if self.color_assignment[modules.var] == 'orange':
                     lever_label = f'''{{id:command_block_minecart,Command:"summon text_display ~{modules.position[0]} ~-1.3 ~{modules.position[1]-4} {{transformation:{{left_rotation:[0f,0f,0f,1f], right_rotation:[0f,0f,0f,1f], translation:[0f,0f,0f], scale:[1.7f,1.7f,1.7f]}},billboard:'center', text:{{bold:true, color:gold, text:'{modules.var}'}}}}"}}'''
                     command.append(lever_label)
@@ -94,9 +95,12 @@ class Circuit:  # circuit holds all its logic gates
                 continue
             else:
                 continue
-
+            
+            #actually placing the modules
             code = f'''{{id:command_block_minecart,Command:"/summon armor_stand ~{modules.position[0]} ~-2 ~{modules.position[1]-4} {{Marker:1b,CustomName:\\"{name}\\",Tags:[placer]}}"}}'''
             command.append(code)
+
+
 
         #placing lantern
         lantern_code = f'''{{id:command_block_minecart,Command:"setblock ~{self.lamp_position[0]} ~-2 ~{self.lamp_position[1]-5} redstone_lamp"}},{{id:command_block_minecart,Command:"setblock ~{self.lamp_position[0]} ~-2 ~{self.lamp_position[1]-4} redstone_wire"}}'''
@@ -121,13 +125,19 @@ class Circuit:  # circuit holds all its logic gates
         command.append(spawn_nodes)
 
 
+        # Set some binary type shit
+        if truth_table:
+            keys = list(vars.keys())
+            for j in range(len(keys)):
+                vars[keys[j]] = ((i >> (len(keys)-1-j)) & 1) == 1
+
 
 
         if truth_table:
             structure_x = abs(right_most-left_most)+3
             structure_y = abs(up_most - down_most)+3
-            structure_block_save = f'''{{id:command_block_minecart,Command:"setblock ~{left_most-1} ~-2 ~{up_most-5} structure_block[mode=save]{{name:'module',posX:0,posY:-1,posZ:0,sizeX:{structure_x},sizeY:5,sizeZ:{structure_y},rotation:'NONE',mirror:'NONE',mode:'SAVE',ignoreEntities:0b,showboundingbox:1b}} replace"}},{{id:command_block_minecart,Command:"setblock ~{left_most-1} ~-1 ~{up_most-5} redstone_block"}}'''
-            structure_block_break = f'''{{id:command_block_minecart,Command:"fill ~{left_most-1} ~-2 ~{up_most-5} ~{left_most-1} ~-1 ~{up_most-5} air"}}'''
+            structure_block_save = f'''{{id:command_block_minecart,Command:"setblock ~{left_most-1} ~3 ~{up_most-5} structure_block[mode=save]{{name:'module',posX:0,posY:-6,posZ:0,sizeX:{structure_x},sizeY:5,sizeZ:{structure_y},rotation:'NONE',mirror:'NONE',mode:'SAVE',ignoreEntities:0b,showboundingbox:1b}} replace"}},{{id:command_block_minecart,Command:"setblock ~{left_most-1} ~4 ~{up_most-5} redstone_block"}}'''
+            structure_block_break = f'''{{id:command_block_minecart,Command:"fill ~{left_most-1} ~3 ~{up_most-5} ~{left_most-1} ~4 ~{up_most-5} air"}}'''
             command.extend([structure_block_save,structure_block_break])
         
         
@@ -155,16 +165,15 @@ class Circuit:  # circuit holds all its logic gates
                 structure_y = abs(up_most - down_most)+3
                 structure_block_load = f'''{{id:command_block_minecart,Command:"setblock ~{left_most-1} ~-2 ~{up_most-5} structure_block[mode=load]{{name:'module',posX:0,posY:-1,posZ:0,sizeX:{structure_x},sizeY:5,sizeZ:{structure_y},rotation:'NONE',mirror:'NONE',mode:'LOAD',ignoreEntities:0b,showboundingbox:1b}} replace"}},{{id:command_block_minecart,Command:"setblock ~{left_most-1} ~-1 ~{up_most-5} redstone_block"}}'''
                 command.extend([structure_block_load])
-            
-            #Placing box
-            for j in range(len(self.list_nodes)):
-                self.list_nodes[j].position = (self.list_nodes[j].position[0]+ (0 if i == 0 else offset_x), self.list_nodes[j].position[1])
 
-            # Set some binary type shit
-            if truth_table:
-                keys = list(vars.keys())
-                for j in range(len(keys)):
-                    vars[keys[j]] = ((i >> (len(keys)-1-j)) & 1) == 1
+                #truth tables levers
+                for modules in self.list_nodes:
+                    if modules.type == Operation.VAR: 
+                        lever_powered = vars[modules.var]
+                        lever_powered_string = "true" if lever_powered else "false"
+                        lever_code_table = f'''{{id:command_block_minecart,Command:"setblock ~{modules.position[0]} ~-2 ~{modules.position[1]-4} lever[face=floor,powered={lever_powered_string}]"}}'''
+                        command.append(lever_code_table)
+            
                 
         command.append(base_end) #close command
         command = ",".join(command)
