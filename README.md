@@ -2,6 +2,7 @@
   
 
 # Proof by Minecraft - A Minecraft logic circuit generator
+## 🌟UQCS 2025 Hackathon Best Newcomers Winner🌟
 ### TLDR; 
 
   A program to generate a Minecraft commands that builds custom Boolean logic circuits.
