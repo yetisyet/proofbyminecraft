@@ -24,5 +24,7 @@ The aim of this project was to create a fun, visual, and deterministic represent
 
 -----
 ### Installation:
-Download and run `Main.py`.
+1. Clone repo
+2. Run `main.py`.
+
 
